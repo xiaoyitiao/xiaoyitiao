@@ -1,0 +1,68 @@
+<<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript</title>
+  </head>
+  <body>
+    <h1>JavaScript基础知识练习</h1>
+    <script>
+        // 变量的定义
+        var name = "Alice";
+        let age = 30;
+        const PI = 3.14;
+        // 打印变量
+        console.log("Name: " , name);
+        console.log("Age: " , age);
+        console.log("PI: " , PI);
+        // 变量的类型
+        console.log("typeof name: " , typeof name); 
+        console.log("typeof age: " , typeof age);  
+        console.log("typeof PI: " , typeof PI);   
+        // JavaScript中的数据类型
+        let isStudent = true; // boolean
+        console.log("typeof isStudent: " , typeof isStudent); 
+        let hobbies = ["reading", "coding", "traveling"]; 
+        console.log("typeof hobbies: " , typeof hobbies); 
+        let person = { name: "Bob", age: 25 }; 
+        console.log("typeof person: " , typeof person);  
+        // 运算符与表达式 （加上注释，请全面补全）
+        let a = 10;
+        let b = 5;
+        // 算术运算符
+        console.log("a + b: " , a + b); // 加法
+        console.log("a - b: " , a - b); // 减法
+        console.log("a * b: " , a * b); // 乘法
+        console.log("a / b: " , a / b); // 除法
+        console.log("a % b: " , a % b); // 取模
+
+        // 流程控制
+        let score = 85;
+        if (score >= 90) {
+            console.log("Grade: A");
+        } else if (score >= 80) {
+            console.log("Grade: B");
+        } else if (score >= 70) {
+            console.log("Grade: C");
+        } else {
+            console.log("Grade: F");
+        }   
+        // 循环控制
+        for (let i = 0; i < 5; i++) {
+            console.log("For loop iteration: " , i);
+        }
+        let j = 0;
+        while (j < 5) {
+            console.log("While loop iteration: " , j);
+            j++;
+        }
+        // 函数定义与调用
+        function greet(name) {
+            return "Hello, " + name + "!";
+        }
+        console.log(greet("Alice")); // 调用函数并打印结果
+    </script>
+    </body>
+</html>
+
