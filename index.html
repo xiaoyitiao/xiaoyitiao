@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
+  <meta name="description" content="智药伴——AI老年人智能用药提醒Web应用">
+  <meta name="theme-color" content="#4A90D9">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>智药伴 - AI智能用药提醒</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/elderly.css">
+  <style>
+    /* PWA启动画面 */
+    .splash-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, #4A90D9 0%, #357ABD 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    .splash-screen.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .splash-icon {
+      font-size: 80px;
+      margin-bottom: 16px;
+      animation: splashBounce 1s ease;
+    }
+    .splash-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .splash-subtitle {
+      font-size: 16px;
+      color: rgba(255,255,255,0.8);
+    }
+    @keyframes splashBounce {
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 启动画面 -->
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-icon">💊</div>
+    <div class="splash-title">智药伴</div>
+    <div class="splash-subtitle">AI老年人智能用药提醒</div>
+  </div>
+
+  <!-- 顶部导航 -->
+  <header class="app-header">
+    <div class="app-logo">
+      <span class="app-logo-icon">💊</span>
+      <span class="app-logo-text">智药伴</span>
+    </div>
+    <button class="elderly-toggle" id="elderlyBtn" onclick="SettingsPage.toggleElderlyMode()">
+      👴 长辈模式
+    </button>
+  </header>
+
+  <!-- ==================== 首页 ==================== -->
+  <main class="page active" id="page-home">
+    <!-- 由JS动态渲染 -->
+  </main>
+
+  <!-- ==================== 录药页面 ==================== -->
+  <main class="page" id="page-add">
+    <!-- 由JS动态渲染 -->
+  </main>
+
+  <!-- ==================== AI问答页面 ==================== -->
+  <main class="page" id="page-ai">
+    <!-- 由JS动态渲染 -->
+  </main>
+
+  <!-- ==================== 家属关怀页面 ==================== -->
+  <main class="page" id="page-family">
+    <!-- 由JS动态渲染 -->
+  </main>
+
+  <!-- ==================== 设置页面 ==================== -->
+  <main class="page" id="page-settings">
+    <!-- 由JS动态渲染 -->
+  </main>
+
+  <!-- 底部导航 -->
+  <nav class="app-nav">
+    <button class="nav-item active" data-page="home">
+      <span class="nav-icon">🏠</span>
+      <span>首页</span>
+    </button>
+    <button class="nav-item" data-page="add">
+      <span class="nav-icon">🎙️</span>
+      <span>录药</span>
+    </button>
+    <button class="nav-item" data-page="ai">
+      <span class="nav-icon">🤖</span>
+      <span>问药师</span>
+    </button>
+    <button class="nav-item" data-page="family">
+      <span class="nav-icon">👨‍👩‍👧</span>
+      <span>家属端</span>
+    </button>
+    <button class="nav-item" data-page="settings">
+      <span class="nav-icon">⚙️</span>
+      <span>设置</span>
+    </button>
+  </nav>
+
+  <!-- 服药提醒弹窗 -->
+  <div class="reminder-modal" id="reminderModal">
+    <div class="reminder-content reminder-shake">
+      <div class="reminder-icon">💊</div>
+      <div class="reminder-title">该吃药啦！</div>
+      <div class="reminder-med" id="reminderMedName"></div>
+      <div class="reminder-dose" id="reminderDose"></div>
+      <div class="reminder-actions">
+        <button class="reminder-btn skip" id="reminderSkip">稍后提醒</button>
+        <button class="reminder-btn confirm" id="reminderConfirm">✅ 我已服用</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    // 启动画面消失
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const splash = document.getElementById('splashScreen');
+        splash.classList.add('hide');
+        setTimeout(() => splash.remove(), 500);
+      }, 1200);
+    });
+
+    // 适老模式按钮状态同步
+    const elderlyBtn = document.getElementById('elderlyBtn');
+    if (DataManager.isElderlyMode()) {
+      elderlyBtn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
