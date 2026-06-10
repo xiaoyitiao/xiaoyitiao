@@ -1,0 +1,17 @@
+{
+  "name": "智药伴 - AI智能用药提醒",
+  "short_name": "智药伴",
+  "description": "专为老年人设计的AI智能用药管理Web应用",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#1B5E20",
+  "theme_color": "#1B5E20",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💊</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
