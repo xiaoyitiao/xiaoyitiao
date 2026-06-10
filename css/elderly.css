@@ -1,297 +1,227 @@
-/* ===== 智药伴 v2.0 - 适老化增强样式 ===== */
+/* ===== 智药伴 v3.0 - 字体增强样式 ===== */
+/* 三级字体：font-standard / font-large(默认) / font-xlarge */
 
-/* 默认就是大字模式！不再需要额外切换才有大字 */
-body.elderly-mode {
+body.font-large {
+  background: #FAFAFA;
+}
+body.font-xlarge {
   background: #FFFDE7;
-  font-size: 24px;
   --text-primary: #000000;
   --text-secondary: #333333;
   --bg-main: #FFFDE7;
-  --bg-card: #FFFFFF;
-  --btn-min-height: 68px;
-  --touch-target: 60px;
+  border: 4px solid var(--primary);
+  border-top: none;
+  border-bottom: none;
 }
 
-body.elderly-mode .app-header {
-  padding: 16px 20px;
-}
-body.elderly-mode .app-logo-text {
-  font-size: 30px;
-}
-body.elderly-mode .elderly-toggle {
-  padding: 12px 24px;
-  font-size: 22px;
-}
-body.elderly-mode .greeting {
-  font-size: 42px;
-}
-body.elderly-mode .greeting-sub {
-  font-size: 24px;
-}
-body.elderly-mode .card {
+/* 超大字模式 - 边框加粗 */
+body.font-xlarge .card {
   padding: 28px;
   border-radius: 20px;
-  border-left-width: 6px;
   border: 3px solid #333;
   border-left: 6px solid var(--primary);
 }
-body.elderly-mode .card-title {
-  font-size: 30px;
+body.font-xlarge .card-title {
+  font-size: 32px;
 }
-
-/* 概览数字 */
-body.elderly-mode .overview-item {
-  padding: 24px;
-  border-width: 3px;
+body.font-xlarge .greeting {
+  font-size: 44px;
 }
-body.elderly-mode .ov-number {
-  font-size: 56px;
-}
-body.elderly-mode .ov-label {
-  font-size: 20px;
-}
-
-/* 时间线 */
-body.elderly-mode .timeline-item {
-  padding: 24px;
-  border-width: 3px;
-}
-body.elderly-mode .timeline-med {
-  font-size: 28px;
-}
-body.elderly-mode .timeline-dose {
-  font-size: 20px;
-}
-body.elderly-mode .timeline-time {
-  font-size: 20px;
-}
-body.elderly-mode .timeline-status {
-  font-size: 20px;
-  padding: 8px 18px;
-}
-
-/* 打卡按钮 */
-body.elderly-mode .check-in-btn {
-  padding: 18px 40px;
-  font-size: 24px;
-  border-radius: 40px;
-  min-height: 68px;
-}
-
-/* 语音按钮放大 */
-body.elderly-mode .voice-btn {
-  width: 160px;
-  height: 160px;
-  font-size: 72px;
-}
-
-/* 表单 */
-body.elderly-mode .form-label {
+body.font-xlarge .greeting-sub {
   font-size: 26px;
 }
-body.elderly-mode .form-input {
-  padding: 20px 22px;
-  font-size: 24px;
+body.font-xlarge .overview-item {
+  padding: 24px;
+  border-width: 4px;
+}
+body.font-xlarge .ov-number {
+  font-size: 60px;
+}
+body.font-xlarge .ov-label {
+  font-size: 22px;
+}
+body.font-xlarge .timeline-item {
+  padding: 26px;
   border-width: 3px;
-  min-height: 68px;
 }
-body.elderly-mode .submit-btn {
-  padding: 22px;
+body.font-xlarge .timeline-med {
+  font-size: 30px;
+}
+body.font-xlarge .check-in-btn {
+  padding: 20px 44px;
+  font-size: 26px;
+  border-radius: 40px;
+  min-height: 72px;
+}
+body.font-xlarge .voice-btn {
+  width: 170px;
+  height: 170px;
+  font-size: 72px;
+}
+body.font-xlarge .form-label {
   font-size: 28px;
-  border-radius: 20px;
-  min-height: 68px;
 }
-
-/* 底部导航 */
-body.elderly-mode .app-nav {
-  padding: 12px 0;
+body.font-xlarge .form-input {
+  padding: 22px 24px;
+  font-size: 26px;
+  border-width: 4px;
+  min-height: 72px;
+}
+body.font-xlarge .submit-btn {
+  padding: 24px;
+  font-size: 30px;
+  border-radius: 20px;
+  min-height: 72px;
+}
+body.font-xlarge .app-nav {
+  padding: 14px 0;
   border-top-width: 3px;
 }
-body.elderly-mode .nav-item {
-  padding: 14px 20px;
-  font-size: 18px;
-  gap: 6px;
+body.font-xlarge .nav-item {
+  padding: 16px 22px;
+  font-size: 20px;
 }
-body.elderly-mode .nav-icon {
-  font-size: 40px;
+body.font-xlarge .nav-icon-svg {
+  width: 36px;
+  height: 36px;
 }
-
-/* 聊天气泡 */
-body.elderly-mode .chat-bubble {
-  padding: 20px 24px;
-  font-size: 24px;
+body.font-xlarge .chat-bubble {
+  padding: 22px 26px;
+  font-size: 26px;
   max-width: 92%;
 }
-body.elderly-mode .chat-input {
-  padding: 20px 24px;
-  font-size: 24px;
-  min-height: 68px;
+body.font-xlarge .chat-input {
+  padding: 22px 26px;
+  font-size: 26px;
+  min-height: 72px;
 }
-body.elderly-mode .quick-q {
-  padding: 14px 22px;
-  font-size: 20px;
-  min-height: 60px;
+body.font-xlarge .quick-q {
+  padding: 16px 24px;
+  font-size: 22px;
+  min-height: 64px;
 }
-body.elderly-mode .chat-voice-btn,
-body.elderly-mode .chat-send-btn {
-  width: 60px;
-  height: 60px;
-  font-size: 28px;
+body.font-xlarge .settings-item {
+  padding: 26px;
+  min-height: 72px;
 }
-
-/* 设置项 */
-body.elderly-mode .settings-item {
-  padding: 24px;
-  min-height: 68px;
+body.font-xlarge .settings-item-label {
+  font-size: 26px;
 }
-body.elderly-mode .settings-item-label {
-  font-size: 24px;
+body.font-xlarge .toggle-switch {
+  width: 68px;
+  height: 40px;
 }
-body.elderly-mode .settings-item-icon {
-  font-size: 34px;
+body.font-xlarge .toggle-switch::after {
+  width: 32px;
+  height: 32px;
 }
-body.elderly-mode .toggle-switch {
-  width: 64px;
-  height: 38px;
-}
-body.elderly-mode .toggle-switch::after {
-  width: 30px;
-  height: 30px;
-}
-
-/* 提醒弹窗 */
-body.elderly-mode .reminder-content {
+body.font-xlarge .reminder-content {
   padding: 40px;
   border-width: 5px;
 }
-body.elderly-mode .reminder-icon {
-  font-size: 88px;
+body.font-xlarge .reminder-title {
+  font-size: 40px;
 }
-body.elderly-mode .reminder-title {
+body.font-xlarge .reminder-med {
+  font-size: 32px;
+}
+body.font-xlarge .reminder-btn {
+  padding: 22px;
+  font-size: 26px;
+  min-height: 72px;
+}
+body.font-xlarge .medicine-item {
+  padding: 26px;
+  gap: 18px;
+  min-height: 72px;
+}
+body.font-xlarge .medicine-icon {
+  width: 68px;
+  height: 68px;
   font-size: 38px;
 }
-body.elderly-mode .reminder-med {
+body.font-xlarge .medicine-name {
+  font-size: 26px;
+}
+body.font-xlarge .family-avatar {
+  width: 110px;
+  height: 110px;
+}
+body.font-xlarge .family-avatar svg { width:64px; height:64px; }
+body.font-xlarge .family-name {
+  font-size: 32px;
+}
+body.font-xlarge .rate-number {
+  font-size: 56px;
+}
+body.font-xlarge .family-bind-code {
+  font-size: 44px;
+  letter-spacing: 12px;
+}
+body.font-xlarge .record-stat-num {
+  font-size: 40px;
+}
+body.font-xlarge .record-med-name {
+  font-size: 26px;
+}
+body.font-xlarge .empty-state-icon {
+  font-size: 96px;
+}
+body.font-xlarge .empty-state-text {
+  font-size: 26px;
+}
+body.font-xlarge .conflict-warning {
+  padding: 22px;
+  border-width: 3px;
+}
+body.font-xlarge .conflict-warning-text {
+  font-size: 24px;
+}
+body.font-xlarge .privacy-content h2 {
   font-size: 30px;
 }
-body.elderly-mode .reminder-dose {
-  font-size: 24px;
+body.font-xlarge .privacy-scroll p {
+  font-size: 22px;
 }
-body.elderly-mode .reminder-btn {
-  padding: 20px;
-  font-size: 24px;
-  min-height: 68px;
-}
-
-/* 药品列表 */
-body.elderly-mode .medicine-item {
-  padding: 24px;
-  gap: 16px;
-  min-height: 68px;
-}
-body.elderly-mode .medicine-icon {
-  width: 64px;
-  height: 64px;
-  font-size: 36px;
-}
-body.elderly-mode .medicine-name {
-  font-size: 24px;
-}
-body.elderly-mode .medicine-schedule {
-  font-size: 18px;
-}
-body.elderly-mode .medicine-time {
-  font-size: 20px;
+body.font-xlarge .privacy-btn {
+  font-size: 26px;
+  min-height: 72px;
 }
 
-/* 家属页面 */
-body.elderly-mode .family-avatar {
-  width: 100px;
-  height: 100px;
-  font-size: 54px;
-}
-body.elderly-mode .family-name {
-  font-size: 30px;
-}
-body.elderly-mode .rate-number {
-  font-size: 52px;
-}
-
-/* 用药记录 */
-body.elderly-mode .record-stat-num {
-  font-size: 36px;
-}
-body.elderly-mode .record-med-name {
-  font-size: 24px;
-}
-
-/* 空状态 */
-body.elderly-mode .empty-state-icon {
-  font-size: 88px;
-}
-body.elderly-mode .empty-state-text {
-  font-size: 24px;
-}
-body.elderly-mode .empty-state-btn {
-  padding: 20px 36px;
-  font-size: 24px;
-  min-height: 68px;
-}
-
-/* 高对比度 - 所有文字用纯黑 */
-body.elderly-mode .text-secondary,
-body.elderly-mode .ov-label,
-body.elderly-mode .timeline-dose,
-body.elderly-mode .timeline-time,
-body.elderly-mode .medicine-schedule,
-body.elderly-mode .weekly-day,
-body.elderly-mode .alert-desc,
-body.elderly-mode .settings-group-title {
+/* 高对比度 - 超大字模式所有文字纯黑 */
+body.font-xlarge .ov-label,
+body.font-xlarge .timeline-dose,
+body.font-xlarge .timeline-time,
+body.font-xlarge .medicine-schedule,
+body.font-xlarge .weekly-day,
+body.font-xlarge .alert-desc,
+body.font-xlarge .settings-group-title {
   color: #333 !important;
 }
 
 /* 焦点样式增强 */
-body.elderly-mode *:focus-visible {
+body.font-xlarge *:focus-visible {
   outline: 4px solid var(--accent);
-  outline-offset: 3px;
+  outline-offset: 4px;
 }
 
 /* 触摸目标放大 */
-body.elderly-mode .nav-item,
-body.elderly-mode .settings-item,
-body.elderly-mode .medicine-item,
-body.elderly-mode .timeline-item,
-body.elderly-mode .quick-q,
-body.elderly-mode .check-in-btn,
-body.elderly-mode .submit-btn,
-body.elderly-mode .reminder-btn,
-body.elderly-mode .photo-btn,
-body.elderly-mode .scan-btn {
-  min-height: 68px;
+body.font-xlarge .nav-item,
+body.font-xlarge .settings-item,
+body.font-xlarge .medicine-item,
+body.font-xlarge .timeline-item,
+body.font-xlarge .quick-q,
+body.font-xlarge .check-in-btn,
+body.font-xlarge .submit-btn,
+body.font-xlarge .reminder-btn,
+body.font-xlarge .photo-btn,
+body.font-xlarge .scan-btn {
+  min-height: 72px;
 }
 
-/* 冲突警告 */
-body.elderly-mode .conflict-warning {
-  padding: 20px;
-  border-width: 3px;
-}
-body.elderly-mode .conflict-warning-text {
-  font-size: 22px;
-}
-
-/* 家属绑定码 */
-body.elderly-mode .family-bind-code {
-  font-size: 40px;
-  letter-spacing: 10px;
-}
-
-/* 隐私弹窗 */
-body.elderly-mode .privacy-content h2 {
-  font-size: 28px;
-}
-body.elderly-mode .privacy-scroll p {
-  font-size: 20px;
-}
-body.elderly-mode .privacy-btn {
-  font-size: 24px;
-  min-height: 68px;
+/* 语音播报按钮 - 超大字模式 */
+body.font-xlarge .voice-broadcast-btn {
+  font-size: 30px;
+  padding: 26px;
+  min-height: 72px;
 }

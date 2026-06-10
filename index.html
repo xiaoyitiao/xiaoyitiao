@@ -15,7 +15,7 @@
   <style>
     .splash-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:linear-gradient(135deg,#1B5E20 0%,#2E7D32 50%,#43A047 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s ease}
     .splash-screen.hide{opacity:0;pointer-events:none}
-    .splash-icon{font-size:80px;margin-bottom:16px;animation:splashBounce 1s ease}
+    .splash-icon{width:80px;height:80px;margin-bottom:16px;animation:splashBounce 1s ease}
     .splash-title{font-size:36px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:4px}
     .splash-subtitle{font-size:18px;color:rgba(255,255,255,.85)}
     @keyframes splashBounce{0%{transform:scale(.5);opacity:0}50%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
@@ -24,24 +24,32 @@
 <body>
 
   <div class="splash-screen" id="splashScreen">
-    <div class="splash-icon">💊</div>
+    <svg class="splash-icon" viewBox="0 0 80 80" fill="none">
+      <circle cx="40" cy="40" r="38" fill="white" fill-opacity="0.2"/>
+      <path d="M40 18 L40 62 M22 40 L58 40" stroke="white" stroke-width="6" stroke-linecap="round"/>
+      <circle cx="40" cy="40" r="12" fill="white" fill-opacity="0.3"/>
+    </svg>
     <div class="splash-title">智药伴</div>
     <div class="splash-subtitle">AI智能用药提醒 守护每一次按时服药</div>
   </div>
 
   <header class="app-header" role="banner">
     <div class="app-logo">
-      <span class="app-logo-icon" aria-hidden="true">💊</span>
+      <svg class="app-logo-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <circle cx="16" cy="16" r="14" fill="white" fill-opacity="0.2"/>
+        <path d="M16 6 L16 26 M8 16 L24 16" stroke="white" stroke-width="3" stroke-linecap="round"/>
+      </svg>
       <span class="app-logo-text">智药伴</span>
     </div>
     <div class="header-actions">
-      <button class="elderly-toggle" id="elderlyBtn" onclick="SettingsPage.toggleElderlyMode()" aria-label="切换长辈模式" role="switch" aria-checked="false">
-        👴 大字模式
+      <button class="font-size-toggle" id="fontToggle" onclick="SettingsPage.cycleFontSize()" aria-label="调整字体大小" role="switch" aria-checked="false">
+        Aa
       </button>
-      <button class="voice-nav-btn" id="voiceNavBtn" onclick="VoiceNav.start()" aria-label="语音导航">
-        🎙️
+      <button class="voice-nav-btn" id="voiceNavBtn" onclick="VoiceNav.start()" aria-label="语音导航" aria-describedby="voiceNavDesc">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
       </button>
     </div>
+    <span id="voiceNavDesc" class="sr-only">点击后说出指令：首页、录药、问药师、家属端、记录</span>
   </header>
 
   <main class="page active" id="page-home" role="main"></main>
@@ -53,63 +61,76 @@
 
   <nav class="app-nav" role="navigation" aria-label="主导航">
     <button class="nav-item active" data-page="home" aria-label="首页">
-      <span class="nav-icon" aria-hidden="true">🏠</span>
+      <svg class="nav-icon-svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
       <span>首页</span>
     </button>
     <button class="nav-item" data-page="add" aria-label="录药">
-      <span class="nav-icon" aria-hidden="true">🎙️</span>
+      <svg class="nav-icon-svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
       <span>录药</span>
     </button>
     <button class="nav-item" data-page="ai" aria-label="问药师">
-      <span class="nav-icon" aria-hidden="true">🤖</span>
+      <svg class="nav-icon-svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
       <span>问药师</span>
     </button>
     <button class="nav-item" data-page="family" aria-label="家属端">
-      <span class="nav-icon" aria-hidden="true">👨‍👩‍👧</span>
+      <svg class="nav-icon-svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
       <span>家属端</span>
     </button>
     <button class="nav-item" data-page="records" aria-label="记录">
-      <span class="nav-icon" aria-hidden="true">📊</span>
+      <svg class="nav-icon-svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
       <span>记录</span>
     </button>
   </nav>
 
+  <!-- 提醒弹窗 -->
   <div class="reminder-modal" id="reminderModal" role="alertdialog" aria-modal="true" aria-labelledby="reminderTitle">
     <div class="reminder-content reminder-shake">
-      <div class="reminder-icon" aria-hidden="true">💊</div>
-      <div class="reminder-title" id="reminderTitle">该吃药啦！</div>
+      <div class="reminder-title" id="reminderTitle">该吃药啦</div>
       <div class="reminder-med" id="reminderMedName"></div>
       <div class="reminder-dose" id="reminderDose"></div>
       <div class="reminder-conflict" id="reminderConflict" style="display:none"></div>
       <div class="reminder-actions">
-        <button class="reminder-btn skip" id="reminderSkip">⏰ 稍后提醒</button>
-        <button class="reminder-btn confirm" id="reminderConfirm">✅ 我已服用</button>
+        <button class="reminder-btn skip" id="reminderSkip">10分钟后提醒</button>
+        <button class="reminder-btn confirm" id="reminderConfirm">我已服用</button>
       </div>
-      <button class="reminder-btn voice-confirm" id="reminderVoiceConfirm" onclick="ReminderSystem.voiceCheckIn()">🎙️ 语音确认</button>
+      <button class="reminder-btn voice-confirm" id="reminderVoiceConfirm" onclick="ReminderSystem.voiceCheckIn()">语音确认</button>
+      <div class="voice-feedback" id="voiceFeedback" style="display:none">
+        <div class="voice-feedback-waves"><span></span><span></span><span></span></div>
+        <div>正在听，请说"已服用"...</div>
+      </div>
     </div>
   </div>
 
-  <div class="privacy-modal" id="privacyModal" role="dialog" aria-modal="true">
+  <!-- 隐私协议（非阻断式，底部条） -->
+  <div class="privacy-bar" id="privacyBar" role="complementary" aria-label="隐私协议">
+    <span>使用本应用即表示同意</span>
+    <button onclick="PrivacyModal.show()" class="privacy-bar-link">《隐私协议与免责声明》</button>
+    <button onclick="PrivacyModal.agree()" class="privacy-bar-close" aria-label="关闭">知道了</button>
+  </div>
+
+  <!-- 隐私协议详情弹窗 -->
+  <div class="privacy-modal" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
     <div class="privacy-content">
-      <h2>📋 隐私协议与免责声明</h2>
+      <h2 id="privacyTitle">隐私协议与免责声明</h2>
       <div class="privacy-scroll">
         <h3>一、隐私保护声明</h3>
-        <p>1. 智药伴所有用药数据仅存储在您的设备本地（浏览器LocalStorage），不会上传至任何服务器。</p>
+        <p>1. 智药伴所有用药数据仅存储在您的设备本地（浏览器IndexedDB），不会上传至任何服务器。</p>
         <p>2. 我们不收集、不存储、不传输任何个人健康信息。</p>
         <p>3. 语音识别由浏览器原生API处理，录音数据不会离开您的设备。</p>
         <p>4. 您可以随时在"设置"中导出或删除全部数据。</p>
+        <p>5. 本地数据采用AES加密存储，密钥由设备指纹派生，不离开设备。</p>
         <h3>二、医疗免责声明</h3>
-        <p>1. 本应用仅作为用药提醒辅助工具，不构成任何医疗建议。</p>
+        <p>1. 本应用仅作为用药提醒辅助工具，不构成任何医疗建议或诊断。</p>
         <p>2. 所有药品信息、相互作用提示仅供参考，不能替代医生或药师的专业意见。</p>
         <p>3. 用药方案请务必遵医嘱，如有疑问请咨询主治医生。</p>
-        <p>4. 因依赖本应用信息而产生的任何健康问题，开发者不承担责任。</p>
+        <p>4. 因依赖本应用信息而产生的任何健康问题，开发者不承担任何责任。</p>
         <h3>三、数据安全</h3>
-        <p>1. 本地数据采用AES加密存储。</p>
+        <p>1. 本地数据采用AES加密存储，密钥基于设备特征本地派生。</p>
         <p>2. 建议定期导出备份服药记录。</p>
         <p>3. 清除浏览器数据将导致记录丢失，请谨慎操作。</p>
+        <p>4. 本站通过GitHub Pages部署，自动启用HTTPS加密传输。</p>
       </div>
       <div class="privacy-actions">
-        <button class="privacy-btn disagree" onclick="PrivacyModal.disagree()">不同意</button>
         <button class="privacy-btn agree" onclick="PrivacyModal.agree()">我已阅读并同意</button>
       </div>
     </div>
@@ -122,15 +143,11 @@
         const s = document.getElementById('splashScreen');
         s.classList.add('hide');
         setTimeout(() => s.remove(), 600);
-      }, 1500);
+      }, 1200);
     });
-    const eb = document.getElementById('elderlyBtn');
-    if (DataManager.isElderlyMode()) {
-      eb.classList.add('active');
-      eb.setAttribute('aria-checked', 'true');
-    }
-    if (!localStorage.getItem('zyb_privacy_agreed')) {
-      document.getElementById('privacyModal').classList.add('show');
+    // 首次使用显示隐私条，回访不再显示
+    if (localStorage.getItem('zyb_privacy_agreed')) {
+      document.getElementById('privacyBar').style.display = 'none';
     }
   </script>
 </body>

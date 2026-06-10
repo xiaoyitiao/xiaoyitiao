@@ -1,4 +1,6 @@
-/* ===== 智药伴 v2.0 - 全局样式 ===== */
+/* ===== 智药伴 v3.0 - 全局样式 ===== */
+/* 核心改动：默认大字高对比度、减少emoji、SVG图标、专业感 */
+
 :root {
   --primary: #1B5E20;
   --primary-light: #E8F5E9;
@@ -15,20 +17,50 @@
   --info-light: #E1F5FE;
   --text-primary: #1A1A1A;
   --text-secondary: #424242;
-  --text-hint: #9E9E9E;
+  --text-hint: #757575;
   --bg-main: #FAFAFA;
   --bg-card: #FFFFFF;
-  --bg-elderly: #FFFDE7;
   --radius: 16px;
   --radius-sm: 10px;
   --shadow: 0 2px 8px rgba(0,0,0,.08);
   --shadow-lg: 0 8px 24px rgba(0,0,0,.12);
-  --font-size-base: 18px;
-  --font-size-lg: 22px;
-  --font-size-xl: 28px;
-  --font-size-xxl: 40px;
-  --btn-min-height: 56px;
-  --touch-target: 48px;
+  /* 默认大字模式变量 */
+  --font-size-base: 20px;
+  --font-size-lg: 24px;
+  --font-size-xl: 32px;
+  --font-size-xxl: 44px;
+  --btn-min-height: 60px;
+  --touch-target: 52px;
+  --line-height: 1.8;
+}
+
+/* 三级字体大小 */
+body.font-standard {
+  --font-size-base: 17px;
+  --font-size-lg: 20px;
+  --font-size-xl: 26px;
+  --font-size-xxl: 36px;
+  --btn-min-height: 52px;
+  --touch-target: 44px;
+  --line-height: 1.6;
+}
+body.font-large {
+  --font-size-base: 20px;
+  --font-size-lg: 24px;
+  --font-size-xl: 32px;
+  --font-size-xxl: 44px;
+  --btn-min-height: 60px;
+  --touch-target: 52px;
+  --line-height: 1.8;
+}
+body.font-xlarge {
+  --font-size-base: 24px;
+  --font-size-lg: 28px;
+  --font-size-xl: 36px;
+  --font-size-xxl: 52px;
+  --btn-min-height: 68px;
+  --touch-target: 60px;
+  --line-height: 1.9;
 }
 
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -38,7 +70,7 @@ html, body {
   font-size: var(--font-size-base);
   color: var(--text-primary);
   background: var(--bg-main);
-  line-height: 1.7;
+  line-height: var(--line-height);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
   scroll-behavior: smooth;
@@ -49,28 +81,30 @@ html, body {
   position: sticky; top: 0; z-index: 100;
   background: var(--primary);
   box-shadow: 0 2px 8px rgba(0,0,0,.15);
-  padding: 12px 16px;
+  padding: 14px 18px;
   display: flex; align-items: center; justify-content: space-between;
 }
-.app-logo { display:flex; align-items:center; gap:8px; }
-.app-logo-icon { font-size:32px; }
-.app-logo-text { font-size:22px; font-weight:800; color:#fff; letter-spacing:2px; }
-.header-actions { display:flex; gap:8px; align-items:center; }
-.elderly-toggle {
-  display:flex; align-items:center; gap:6px;
+.app-logo { display:flex; align-items:center; gap:10px; }
+.app-logo-icon { width:36px; height:36px; }
+.app-logo-text { font-size:24px; font-weight:800; color:#fff; letter-spacing:2px; }
+.header-actions { display:flex; gap:10px; align-items:center; }
+
+.font-size-toggle {
+  display:flex; align-items:center; justify-content:center;
+  width:48px; height:40px;
   background:rgba(255,255,255,.15); border:2px solid rgba(255,255,255,.5);
-  border-radius:30px; padding:8px 16px;
-  font-size:16px; font-weight:700; color:#fff;
+  border-radius:10px;
+  font-size:16px; font-weight:900; color:#fff;
   cursor:pointer; transition:all .3s;
+  letter-spacing: -1px;
 }
-.elderly-toggle:hover, .elderly-toggle.active {
-  background:var(--accent); border-color:var(--accent);
-}
+.font-size-toggle:hover { background:var(--accent); border-color:var(--accent); }
+
 .voice-nav-btn {
-  width:44px; height:44px; border-radius:50%;
+  width:48px; height:40px; border-radius:10px;
   border:2px solid rgba(255,255,255,.5);
   background:rgba(255,255,255,.15);
-  font-size:22px; cursor:pointer; color:#fff;
+  cursor:pointer; color:#fff;
   display:flex; align-items:center; justify-content:center;
   transition:all .3s;
 }
@@ -81,18 +115,18 @@ html, body {
   position:fixed; bottom:0; left:0; right:0; z-index:100;
   background:var(--bg-card); box-shadow:0 -2px 12px rgba(0,0,0,.1);
   display:flex; justify-content:space-around;
-  padding:6px 0; padding-bottom:max(6px,env(safe-area-inset-bottom));
+  padding:6px 0; padding-bottom:max(8px,env(safe-area-inset-bottom));
   border-top:2px solid #E0E0E0;
 }
 .nav-item {
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  padding:8px 12px; border-radius:12px; cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:8px 14px; border-radius:12px; cursor:pointer;
   transition:all .3s; color:var(--text-secondary);
   background:none; border:none; font-size:13px;
   min-height:var(--touch-target);
 }
 .nav-item.active { color:var(--primary); background:var(--primary-light); font-weight:700; }
-.nav-item .nav-icon { font-size:28px; }
+.nav-icon-svg { width:28px; height:28px; }
 
 /* ===== 页面 ===== */
 .page {
@@ -105,51 +139,66 @@ html, body {
 /* ===== 卡片 ===== */
 .card {
   background:var(--bg-card); border-radius:var(--radius);
-  padding:20px; margin-bottom:16px;
+  padding:22px; margin-bottom:16px;
   box-shadow:var(--shadow);
-  border-left:4px solid var(--primary);
+  border-left:5px solid var(--primary);
 }
 .card-title {
   font-size:var(--font-size-lg); font-weight:700;
-  margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  margin-bottom:14px; display:flex; align-items:center; gap:8px;
 }
 
 /* ===== 首页 ===== */
 .greeting { font-size:var(--font-size-xl); font-weight:800; margin-bottom:4px; }
 .greeting-sub { font-size:var(--font-size-base); color:var(--text-secondary); margin-bottom:20px; }
 
+/* 语音播报按钮 - 首屏核心 */
+.voice-broadcast-btn {
+  width:100%; padding:22px;
+  background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+  color:#fff; border:none; border-radius:var(--radius);
+  font-size:var(--font-size-lg); font-weight:700;
+  cursor:pointer; transition:all .3s;
+  min-height:var(--btn-min-height);
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  margin-bottom:20px;
+  box-shadow: 0 4px 16px rgba(27,94,32,.3);
+}
+.voice-broadcast-btn:active { transform:scale(.98); }
+.voice-broadcast-btn svg { width:28px; height:28px; }
+
 .today-overview {
   display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;
 }
 .overview-item {
   background:var(--bg-card); border-radius:var(--radius);
-  padding:18px; text-align:center; box-shadow:var(--shadow);
-  border:2px solid transparent; transition:border-color .3s;
+  padding:20px; text-align:center; box-shadow:var(--shadow);
+  border:3px solid transparent; transition:border-color .3s;
 }
 .overview-item.taken { border-color:var(--success); }
 .overview-item.missed { border-color:var(--danger); }
 .overview-item.pending { border-color:var(--warning); }
 .ov-number { font-size:var(--font-size-xxl); font-weight:900; }
-.ov-label { font-size:15px; color:var(--text-secondary); margin-top:4px; }
+.ov-label { font-size:15px; color:var(--text-secondary); margin-top:4px; font-weight:600; }
 .overview-item.taken .ov-number { color:var(--success); }
 .overview-item.missed .ov-number { color:var(--danger); }
 .overview-item.pending .ov-number { color:var(--warning); }
 
 /* 时间线 */
-.timeline { position:relative; padding-left:30px; }
+.timeline { position:relative; padding-left:32px; }
 .timeline::before {
   content:''; position:absolute; left:12px; top:0; bottom:0;
   width:3px; background:var(--primary-light); border-radius:2px;
 }
 .timeline-item {
-  position:relative; margin-bottom:16px; padding:18px;
+  position:relative; margin-bottom:16px; padding:20px;
   background:var(--bg-card); border-radius:var(--radius);
   box-shadow:var(--shadow); cursor:pointer; transition:all .2s;
   border:2px solid transparent;
 }
 .timeline-item:active { transform:scale(.98); }
 .timeline-item::before {
-  content:''; position:absolute; left:-24px; top:22px;
+  content:''; position:absolute; left:-26px; top:24px;
   width:14px; height:14px; border-radius:50%;
   background:var(--primary); border:3px solid var(--bg-main);
 }
@@ -161,8 +210,8 @@ html, body {
 .timeline-med { font-size:var(--font-size-lg); font-weight:700; }
 .timeline-dose { font-size:15px; color:var(--text-secondary); margin-top:4px; }
 .timeline-status {
-  display:inline-block; padding:6px 14px; border-radius:20px;
-  font-size:15px; font-weight:700; margin-top:8px;
+  display:inline-block; padding:6px 16px; border-radius:20px;
+  font-size:15px; font-weight:700; margin-top:10px;
 }
 .timeline-status.pending { background:var(--warning-light); color:var(--warning); }
 .timeline-status.completed { background:var(--success-light); color:var(--success); }
@@ -172,9 +221,9 @@ html, body {
 .check-in-btn {
   display:inline-flex; align-items:center; gap:8px;
   background:var(--success); color:#fff; border:none;
-  border-radius:30px; padding:14px 32px;
+  border-radius:30px; padding:16px 36px;
   font-size:var(--font-size-base); font-weight:700;
-  cursor:pointer; transition:all .3s; margin-top:10px;
+  cursor:pointer; transition:all .3s; margin-top:12px;
   min-height:var(--btn-min-height);
 }
 .check-in-btn:active { transform:scale(.96); }
@@ -182,9 +231,9 @@ html, body {
 
 /* ===== 录药页面 ===== */
 .voice-section { text-align:center; padding:24px 16px; }
-.voice-hint { font-size:var(--font-size-lg); color:var(--text-secondary); margin-bottom:24px; }
+.voice-hint { font-size:var(--font-size-base); color:var(--text-secondary); margin-bottom:24px; line-height:1.8; }
 .voice-btn {
-  width:130px; height:130px; border-radius:50%; border:none;
+  width:140px; height:140px; border-radius:50%; border:none;
   background:linear-gradient(135deg,var(--primary),var(--primary-dark));
   color:#fff; font-size:56px; cursor:pointer;
   box-shadow:0 8px 30px rgba(27,94,32,.35);
@@ -208,12 +257,11 @@ html, body {
 .voice-result.show { display:block; }
 .voice-result-text {
   font-size:var(--font-size-base); color:var(--text-primary);
-  margin-bottom:12px; padding:12px; background:var(--primary-light);
+  margin-bottom:12px; padding:14px; background:var(--primary-light);
   border-radius:var(--radius-sm);
 }
 
 /* 拍照识别 */
-.photo-section { text-align:center; margin-top:24px; }
 .photo-btn {
   display:inline-flex; align-items:center; gap:10px;
   background:var(--accent); color:#fff; border:none;
@@ -225,7 +273,6 @@ html, body {
 .photo-btn:hover { filter:brightness(1.1); }
 
 /* 扫码 */
-.scan-section { text-align:center; margin-top:24px; }
 .scan-btn {
   display:inline-flex; align-items:center; gap:10px;
   background:var(--info); color:#fff; border:none;
@@ -238,7 +285,7 @@ html, body {
 /* 手动录入 */
 .manual-form { display:none; margin-top:20px; }
 .manual-form.show { display:block; }
-.form-group { margin-bottom:16px; }
+.form-group { margin-bottom:18px; }
 .form-label { display:block; font-size:var(--font-size-base); font-weight:700; margin-bottom:8px; color:var(--text-primary); }
 .form-input {
   width:100%; padding:16px 18px; border:3px solid #BDBDBD;
@@ -249,7 +296,7 @@ html, body {
 .form-input:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 3px rgba(27,94,32,.2); }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 .submit-btn {
-  width:100%; padding:18px;
+  width:100%; padding:20px;
   background:linear-gradient(135deg,var(--primary),var(--primary-dark));
   color:#fff; border:none; border-radius:var(--radius);
   font-size:var(--font-size-lg); font-weight:700;
@@ -266,15 +313,15 @@ html, body {
   display:flex; align-items:flex-start; gap:12px;
 }
 .conflict-warning-icon { font-size:28px; flex-shrink:0; }
-.conflict-warning-text { font-size:15px; color:var(--danger); font-weight:600; line-height:1.6; }
+.conflict-warning-text { font-size:var(--font-size-base); color:var(--danger); font-weight:600; line-height:1.7; }
 
 /* ===== AI问答 ===== */
-.chat-container { display:flex; flex-direction:column; height:calc(100vh - 200px); }
+.chat-container { display:flex; flex-direction:column; height:calc(100vh - 220px); }
 .chat-messages { flex:1; overflow-y:auto; padding:10px 0; }
 .chat-bubble {
   max-width:88%; padding:16px 20px; border-radius:18px;
   margin-bottom:12px; font-size:var(--font-size-base);
-  line-height:1.7; animation:fadeInUp .3s ease;
+  line-height:var(--line-height); animation:fadeInUp .3s ease;
 }
 @keyframes fadeInUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 .chat-bubble.ai {
@@ -288,8 +335,8 @@ html, body {
 }
 .chat-bubble .ai-tag {
   display:inline-block; background:var(--primary); color:#fff;
-  font-size:12px; padding:2px 8px; border-radius:10px;
-  margin-bottom:6px; font-weight:700;
+  font-size:12px; padding:2px 10px; border-radius:10px;
+  margin-bottom:8px; font-weight:700;
 }
 .chat-input-area { display:flex; gap:8px; padding:12px 0; align-items:center; }
 .chat-input {
@@ -309,7 +356,7 @@ html, body {
 
 .quick-questions { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:12px; }
 .quick-q {
-  padding:10px 18px; border-radius:20px;
+  padding:10px 20px; border-radius:20px;
   background:var(--primary-light); color:var(--primary);
   font-size:15px; cursor:pointer; border:2px solid var(--primary);
   transition:all .3s; font-weight:600;
@@ -323,10 +370,28 @@ html, body {
 .family-avatar {
   width:80px; height:80px; border-radius:50%;
   background:var(--primary-light); margin:0 auto 12px;
-  display:flex; align-items:center; justify-content:center; font-size:40px;
+  display:flex; align-items:center; justify-content:center;
 }
+.family-avatar svg { width:48px; height:48px; }
 .family-name { font-size:var(--font-size-lg); font-weight:700; }
 .family-relation { font-size:15px; color:var(--text-secondary); }
+
+/* 家属绑定引导 */
+.family-bind-guide {
+  background:var(--primary-light); border:3px solid var(--primary);
+  border-radius:var(--radius); padding:24px; margin-bottom:16px;
+  text-align:center;
+}
+.family-bind-guide-title { font-size:var(--font-size-lg); font-weight:800; color:var(--primary); margin-bottom:12px; }
+.family-bind-guide-steps { text-align:left; margin:16px 0; }
+.family-bind-guide-steps li { margin-bottom:10px; font-size:var(--font-size-base); line-height:1.7; }
+.family-bind-guide-steps li strong { color:var(--primary); }
+.family-bind-code {
+  font-size:36px; font-weight:900; color:var(--primary);
+  text-align:center; letter-spacing:8px; margin:16px 0;
+  padding:16px; background:#fff; border-radius:14px;
+  border:2px dashed var(--primary);
+}
 
 /* 服药率环 */
 .rate-circle { width:160px; height:160px; margin:20px auto; position:relative; }
@@ -355,15 +420,10 @@ html, body {
 .alert-title { font-weight:700; color:var(--danger); font-size:var(--font-size-base); }
 .alert-desc { font-size:15px; color:var(--text-secondary); margin-top:2px; }
 
-/* 家属绑定 */
+/* 家属绑定码卡片 */
 .family-bind-card {
   background:var(--info-light); border:2px solid var(--info);
   border-radius:var(--radius); padding:16px; margin-bottom:12px;
-}
-.family-bind-code {
-  font-size:32px; font-weight:900; color:var(--info);
-  text-align:center; letter-spacing:6px; margin:12px 0;
-  padding:12px; background:#fff; border-radius:12px;
 }
 
 /* ===== 用药记录页 ===== */
@@ -372,7 +432,7 @@ html, body {
 }
 .record-stat {
   background:var(--bg-card); border-radius:var(--radius);
-  padding:16px; text-align:center; box-shadow:var(--shadow);
+  padding:18px; text-align:center; box-shadow:var(--shadow);
 }
 .record-stat-num { font-size:var(--font-size-xl); font-weight:900; }
 .record-stat-label { font-size:14px; color:var(--text-secondary); margin-top:4px; }
@@ -380,7 +440,7 @@ html, body {
 .record-list { list-style:none; }
 .record-item {
   display:flex; align-items:center; gap:14px;
-  padding:16px; background:var(--bg-card); border-radius:var(--radius);
+  padding:18px; background:var(--bg-card); border-radius:var(--radius);
   margin-bottom:8px; box-shadow:var(--shadow);
 }
 .record-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
@@ -397,13 +457,13 @@ html, body {
 .settings-group-title { font-size:14px; color:var(--text-secondary); margin-bottom:8px; padding-left:4px; font-weight:600; }
 .settings-item {
   display:flex; align-items:center; justify-content:space-between;
-  padding:18px 20px; background:var(--bg-card); border-radius:var(--radius-sm);
+  padding:20px 22px; background:var(--bg-card); border-radius:var(--radius-sm);
   margin-bottom:2px; cursor:pointer; min-height:var(--touch-target);
 }
 .settings-item:first-of-type { border-radius:var(--radius) var(--radius) var(--radius-sm) var(--radius-sm); }
 .settings-item:last-of-type { border-radius:var(--radius-sm) var(--radius-sm) var(--radius) var(--radius); }
 .settings-item:only-of-type { border-radius:var(--radius); }
-.settings-item-left { display:flex; align-items:center; gap:12px; }
+.settings-item-left { display:flex; align-items:center; gap:14px; }
 .settings-item-icon { font-size:26px; }
 .settings-item-label { font-size:var(--font-size-base); font-weight:600; }
 
@@ -428,15 +488,14 @@ html, body {
 .reminder-modal.show { display:flex; }
 .reminder-content {
   background:var(--bg-card); border-radius:24px; padding:32px;
-  text-align:center; max-width:380px; width:90%;
+  text-align:center; max-width:400px; width:90%;
   animation:slideUp .3s ease;
   border:4px solid var(--success);
 }
 @keyframes slideUp { from{transform:translateY(40px);opacity:0} to{transform:translateY(0);opacity:1} }
-.reminder-icon { font-size:72px; margin-bottom:16px; }
-.reminder-title { font-size:var(--font-size-xl); font-weight:800; margin-bottom:8px; }
-.reminder-med { font-size:var(--font-size-lg); color:var(--primary); font-weight:700; margin-bottom:4px; }
-.reminder-dose { font-size:var(--font-size-base); color:var(--text-secondary); margin-bottom:16px; }
+.reminder-title { font-size:var(--font-size-xl); font-weight:800; margin-bottom:12px; }
+.reminder-med { font-size:var(--font-size-lg); color:var(--primary); font-weight:700; margin-bottom:6px; }
+.reminder-dose { font-size:var(--font-size-base); color:var(--text-secondary); margin-bottom:18px; }
 .reminder-conflict {
   background:var(--danger-light); border:2px solid var(--danger);
   border-radius:var(--radius-sm); padding:12px; margin-bottom:16px;
@@ -444,7 +503,7 @@ html, body {
 }
 .reminder-actions { display:flex; gap:12px; margin-bottom:12px; }
 .reminder-btn {
-  flex:1; padding:16px; border:none; border-radius:16px;
+  flex:1; padding:18px; border:none; border-radius:16px;
   font-size:var(--font-size-base); font-weight:700;
   cursor:pointer; transition:all .3s; min-height:var(--btn-min-height);
 }
@@ -452,9 +511,48 @@ html, body {
 .reminder-btn.skip { background:#EEEEEE; color:var(--text-secondary); }
 .reminder-btn.voice-confirm {
   width:100%; background:var(--accent); color:#fff;
-  border:none; border-radius:16px; padding:14px;
+  border:none; border-radius:16px; padding:16px;
   font-size:var(--font-size-base); font-weight:700;
   cursor:pointer; min-height:var(--btn-min-height);
+}
+
+/* 语音反馈状态 */
+.voice-feedback {
+  margin-top:12px; padding:16px; background:var(--primary-light);
+  border-radius:var(--radius-sm); text-align:center;
+  font-size:var(--font-size-base); color:var(--primary);
+}
+.voice-feedback-waves {
+  display:flex; justify-content:center; gap:4px; margin-bottom:8px;
+}
+.voice-feedback-waves span {
+  width:8px; height:8px; background:var(--primary);
+  border-radius:50%; animation:waveAnim 1.2s ease-in-out infinite;
+}
+.voice-feedback-waves span:nth-child(2) { animation-delay:0.2s; }
+.voice-feedback-waves span:nth-child(3) { animation-delay:0.4s; }
+@keyframes waveAnim { 0%,100%{transform:scale(1)} 50%{transform:scale(1.6)} }
+
+/* ===== 隐私条（非阻断式） ===== */
+.privacy-bar {
+  position:fixed; bottom:80px; left:12px; right:12px; z-index:200;
+  background:var(--bg-card); border:2px solid var(--primary);
+  border-radius:var(--radius); padding:16px 20px;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+  box-shadow:var(--shadow-lg);
+  animation:slideUp .4s ease;
+  font-size:15px; color:var(--text-secondary);
+}
+.privacy-bar-link {
+  color:var(--primary); font-weight:700; text-decoration:underline;
+  background:none; border:none; cursor:pointer;
+  font-size:15px; padding:0;
+}
+.privacy-bar-close {
+  margin-left:auto; padding:10px 20px;
+  background:var(--primary); color:#fff; border:none;
+  border-radius:20px; font-size:15px; font-weight:700;
+  cursor:pointer; min-height:44px;
 }
 
 /* ===== 隐私弹窗 ===== */
@@ -472,19 +570,18 @@ html, body {
 .privacy-content h2 { font-size:var(--font-size-lg); margin-bottom:16px; text-align:center; }
 .privacy-scroll {
   flex:1; overflow-y:auto; margin-bottom:16px;
-  padding:12px; background:var(--bg-main); border-radius:12px;
+  padding:14px; background:var(--bg-main); border-radius:12px;
   max-height:50vh;
 }
 .privacy-scroll h3 { font-size:16px; font-weight:700; margin:12px 0 6px; color:var(--primary); }
 .privacy-scroll p { font-size:15px; margin-bottom:8px; color:var(--text-secondary); line-height:1.7; }
 .privacy-actions { display:flex; gap:12px; }
 .privacy-btn {
-  flex:1; padding:16px; border:none; border-radius:16px;
+  flex:1; padding:18px; border:none; border-radius:16px;
   font-size:var(--font-size-base); font-weight:700;
   cursor:pointer; min-height:var(--btn-min-height);
 }
 .privacy-btn.agree { background:var(--primary); color:#fff; }
-.privacy-btn.disagree { background:#EEEEEE; color:var(--text-secondary); }
 
 /* ===== Toast ===== */
 .toast {
@@ -500,7 +597,7 @@ html, body {
 .medicine-list { list-style:none; }
 .medicine-item {
   display:flex; align-items:center; gap:14px;
-  padding:18px; background:var(--bg-card); border-radius:var(--radius);
+  padding:20px; background:var(--bg-card); border-radius:var(--radius);
   margin-bottom:10px; box-shadow:var(--shadow); cursor:pointer;
   transition:transform .2s; min-height:var(--touch-target);
 }
@@ -510,9 +607,6 @@ html, body {
   display:flex; align-items:center; justify-content:center; font-size:28px;
   flex-shrink:0;
 }
-.medicine-icon.morning { background:#FFF3E0; }
-.medicine-icon.noon { background:var(--primary-light); }
-.medicine-icon.night { background:#EDE7F6; }
 .medicine-info { flex:1; }
 .medicine-name { font-size:var(--font-size-base); font-weight:700; }
 .medicine-schedule { font-size:14px; color:var(--text-secondary); margin-top:2px; }
@@ -530,6 +624,15 @@ html, body {
   min-height:var(--btn-min-height);
 }
 
+/* ===== iOS语音兼容降级提示 ===== */
+.ios-voice-notice {
+  background:var(--warning-light); border:2px solid var(--warning);
+  border-radius:var(--radius-sm); padding:14px; margin-bottom:12px;
+  font-size:14px; color:var(--warning); font-weight:600;
+  display:none;
+}
+body.is-ios .ios-voice-notice { display:block; }
+
 /* ===== 无障碍 ===== */
 *:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
 .sr-only { position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0; }
@@ -539,6 +642,7 @@ html, body {
   .today-overview{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
   .record-summary{grid-template-columns:1fr}
+  .privacy-bar{font-size:13px;padding:12px 16px;}
 }
 @media(min-width:768px){
   .page{max-width:560px}
