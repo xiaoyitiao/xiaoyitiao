@@ -16,7 +16,13 @@ export const 默认数据 = {
   设置: {
     长辈模式: false,
     语音播报: true,
-    漏服提醒: true
+    漏服提醒: true,
+    云端同步: false,
+    应用ID: '',
+    应用密钥: '',
+    服务地址: '',
+    家庭编号: '',
+    查看密码: ''
   },
   AI配置: {
     启用真实API: false,
@@ -55,10 +61,15 @@ export function 加载数据() {
 
 /**
  * 将当前数据保存到 localStorage
+ * 保存成功后会触发数据已保存事件，供云端同步等功能监听
  */
 export function 保存数据() {
   try {
     localStorage.setItem(存储键, JSON.stringify(应用数据));
+    // 触发自定义事件，通知其他模块数据已更新
+    if (typeof document !== 'undefined') {
+      document.dispatchEvent(new CustomEvent('数据已保存'));
+    }
   } catch (错误) {
     console.error('保存数据失败:', 错误);
   }

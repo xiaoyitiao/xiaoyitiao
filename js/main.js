@@ -10,7 +10,7 @@ import { 渲染今日用药 } from './today.js';
 import { 切换录入方式, 处理语音添加药品, 处理照片上传, 确认添加药品 } from './add.js';
 import { 发送AI消息 } from './ai.js';
 import { 检查提醒 } from './reminder.js';
-import { 切换长辈模式, 更新模式按钮, 清除所有数据, 渲染AI配置表单, 保存AI配置, 测试AI连接 } from './settings.js';
+import { 切换长辈模式, 更新模式按钮, 清除所有数据, 渲染AI配置表单, 保存AI配置, 测试AI连接, 渲染云端配置表单, 保存云端配置, 同步到云端, 家属远程查看 } from './settings.js';
 
 /**
  * 绑定页面事件
@@ -99,8 +99,21 @@ function 绑定事件() {
   document.getElementById('aiModel').addEventListener('change', 保存AI配置);
   document.getElementById('aiTestBtn').addEventListener('click', 测试AI连接);
 
+  // 云端同步配置表单
+  document.getElementById('cloudSync').addEventListener('change', 保存云端配置);
+  document.getElementById('cloudAppId').addEventListener('change', 保存云端配置);
+  document.getElementById('cloudAppKey').addEventListener('change', 保存云端配置);
+  document.getElementById('cloudServer').addEventListener('change', 保存云端配置);
+  document.getElementById('familyId').addEventListener('change', 保存云端配置);
+  document.getElementById('familyPassword').addEventListener('change', 保存云端配置);
+  document.getElementById('cloudUploadBtn').addEventListener('click', 同步到云端);
+  document.getElementById('viewFamilyBtn').addEventListener('click', 家属远程查看);
+
   // 清除数据
   document.getElementById('clearDataBtn').addEventListener('click', 清除所有数据);
+
+  // 监听数据保存事件，自动同步到云端
+  启用自动云端同步();
 
   // 监听语音输入结果事件，根据目标分发给不同模块
   document.addEventListener('语音输入结果', function (事件) {
@@ -172,8 +185,9 @@ function 初始化() {
   document.getElementById('voiceReminder').checked = 应用数据.设置.语音播报;
   document.getElementById('missReminder').checked = 应用数据.设置.漏服提醒;
 
-  // 渲染 AI 配置表单
+  // 渲染 AI 配置表单和云端配置表单
   渲染AI配置表单();
+  渲染云端配置表单();
 
   // 记录活跃时间
   const 现在 = new Date();
@@ -184,6 +198,30 @@ function 初始化() {
   // 每分钟检查一次提醒
   检查提醒();
   setInterval(检查提醒, 60000);
+}
+
+// 自动同步定时器
+let 自动同步定时器 = null;
+
+/**
+ * 启用自动云端同步
+ * 当本地数据保存后，如果开启了云端同步，则延迟自动上传
+ */
+function 启用自动云端同步() {
+  document.addEventListener('数据已保存', () => {
+    const 设置 = 应用数据.设置;
+    if (!设置.云端同步 || !设置.应用ID || !设置.应用密钥 || !设置.家庭编号 || !设置.查看密码) {
+      return;
+    }
+
+    // 防抖：3 秒内多次保存只同步一次
+    if (自动同步定时器) {
+      clearTimeout(自动同步定时器);
+    }
+    自动同步定时器 = setTimeout(() => {
+      同步到云端();
+    }, 3000);
+  });
 }
 
 // 启动应用

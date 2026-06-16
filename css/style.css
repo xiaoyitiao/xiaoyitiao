@@ -861,3 +861,107 @@ body.elderly-mode .test-result {
 body.elderly-mode .chat-container {
   height: 360px;
 }
+
+/* 家属远程查看结果 */
+.remote-view-result {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: var(--圆角);
+  background-color: var(--卡片背景);
+  border: 1px solid var(--边框);
+}
+
+.remote-view-header {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--边框);
+}
+
+.remote-view-header h4 {
+  font-size: var(--大字体);
+  margin-bottom: 12px;
+  color: var(--主色);
+}
+
+.remote-view-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 12px;
+}
+
+.remote-stat {
+  text-align: center;
+}
+
+.remote-stat strong {
+  display: block;
+  font-size: var(--超大字体);
+  color: var(--主色);
+}
+
+.remote-stat span {
+  color: var(--次要文字);
+  font-size: 0.9rem;
+}
+
+.remote-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #ffebee;
+  color: var(--危险色);
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.remote-med-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.remote-med-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: var(--背景);
+  border-radius: 8px;
+}
+
+.remote-med-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--卡片背景);
+  border-radius: 50%;
+  font-size: 1.4rem;
+}
+
+.remote-med-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.remote-med-name {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.remote-med-detail {
+  color: var(--次要文字);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.empty-tip {
+  text-align: center;
+  color: var(--次要文字);
+  padding: 24px;
+}
+

@@ -228,6 +228,52 @@
           <div id="aiTestResult" class="test-result hidden"></div>
         </div>
         <div class="settings-group">
+          <h3>家庭共享设置</h3>
+          <p class="setting-desc">配置后，老人用药数据可同步到云端，家属输入家庭编号和查看密码即可远程查看。</p>
+          <label class="setting-item">
+            <span>开启云端同步</span>
+            <input type="checkbox" id="cloudSync">
+          </label>
+          <div class="form-group">
+            <label for="cloudAppId">云服务应用 ID</label>
+            <input type="text" id="cloudAppId" placeholder="如：你的 LeanCloud 应用 ID">
+          </div>
+          <div class="form-group">
+            <label for="cloudAppKey">云服务应用 Key</label>
+            <input type="password" id="cloudAppKey" placeholder="如：你的 LeanCloud 应用 Key">
+          </div>
+          <div class="form-group">
+            <label for="cloudServer">服务地址（可选）</label>
+            <input type="text" id="cloudServer" placeholder="国内版一般可不填，国际版需填写">
+          </div>
+          <div class="form-group">
+            <label for="familyId">家庭编号</label>
+            <input type="text" id="familyId" placeholder="用于家属查看的唯一编号">
+          </div>
+          <div class="form-group">
+            <label for="familyPassword">查看密码</label>
+            <input type="password" id="familyPassword" placeholder="家属查看时需要输入">
+          </div>
+          <button id="cloudUploadBtn" class="btn-secondary btn-full">立即同步到云端</button>
+          <div id="cloudStatus" class="test-result hidden"></div>
+        </div>
+
+        <div class="settings-group">
+          <h3>家属查看入口</h3>
+          <p class="setting-desc">家属可在此输入家庭编号和查看密码，远程查看老人用药情况。</p>
+          <div class="form-group">
+            <label for="viewFamilyId">家庭编号</label>
+            <input type="text" id="viewFamilyId" placeholder="输入老人提供的家庭编号">
+          </div>
+          <div class="form-group">
+            <label for="viewFamilyPassword">查看密码</label>
+            <input type="password" id="viewFamilyPassword" placeholder="输入查看密码">
+          </div>
+          <button id="viewFamilyBtn" class="btn-primary btn-full">查看老人用药情况</button>
+          <div id="viewFamilyStatus" class="test-result hidden"></div>
+        </div>
+
+        <div class="settings-group">
           <h3>关于</h3>
           <div class="setting-item">
             <span>版本</span>
