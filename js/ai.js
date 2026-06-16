@@ -63,6 +63,41 @@ function 获取AI回复(问题) {
 }
 
 /**
+ * 向 AI 接口发送通用解析请求
+ * 可用于拍照识别后的药品信息提取等非聊天场景
+ * @param {string} 用户内容
+ * @param {string} 系统提示
+ * @returns {Promise<string|null>} AI 返回的文本内容
+ */
+export async function 请求AI解析(用户内容, 系统提示) {
+  if (!AI配置.启用真实API || !AI配置.API地址 || !AI配置.API密钥) {
+    return null;
+  }
+
+  try {
+    const 响应 = await fetch(AI配置.API地址, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + AI配置.API密钥
+      },
+      body: JSON.stringify({
+        model: AI配置.模型,
+        messages: [
+          { role: 'system', content: 系统提示 },
+          { role: 'user', content: 用户内容 }
+        ]
+      })
+    });
+    const 数据 = await 响应.json();
+    return 数据.choices?.[0]?.message?.content || 数据.result || null;
+  } catch (错误) {
+    console.error('AI解析接口调用失败:', 错误);
+    return null;
+  }
+}
+
+/**
  * 发送 AI 消息并获取回复
  * @param {string} 文本
  */
@@ -74,27 +109,9 @@ export async function 发送AI消息(文本) {
 
   let 回复 = '';
   if (AI配置.启用真实API && AI配置.API地址 && AI配置.API密钥) {
-    try {
-      const 响应 = await fetch(AI配置.API地址, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + AI配置.API密钥
-        },
-        body: JSON.stringify({
-          model: AI配置.模型,
-          messages: [
-            { role: 'system', content: '你是一位专业的用药咨询助手，请用简洁、温和的中文回答老年人或家属的用药问题，注意用药安全提醒。' },
-            { role: 'user', content: 文本 }
-          ]
-        })
-      });
-      const 数据 = await 响应.json();
-      回复 = 数据.choices?.[0]?.message?.content || 数据.result || 'AI暂时无法回答';
-    } catch (错误) {
-      console.error('AI接口调用失败:', 错误);
-      回复 = '网络连接失败，已切换为本地智能回复。' + 获取AI回复(文本);
-    }
+    const 系统提示 = '你是一位专业的用药咨询助手，请用简洁、温和的中文回答老年人或家属的用药问题，注意用药安全提醒。';
+    const 解析结果 = await 请求AI解析(文本, 系统提示);
+    回复 = 解析结果 || 'AI暂时无法回答';
   } else {
     // 模拟网络延迟
     await new Promise(解决 => setTimeout(解决, 600));

@@ -463,6 +463,59 @@ h3 {
   border-radius: var(--圆角);
 }
 
+/* 拍照识别状态与结果 */
+.photo-status {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: var(--背景);
+  color: var(--次要文字);
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.photo-status.error {
+  background-color: #ffebee;
+  color: var(--危险色);
+}
+
+.photo-result {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: var(--圆角);
+  background-color: #e8f5e9;
+  border: 1px solid #c8e6c9;
+}
+
+.photo-result .result-title {
+  font-size: var(--大字体);
+  font-weight: 700;
+  color: var(--主色);
+  margin-bottom: 12px;
+}
+
+.photo-result .result-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #c8e6c9;
+  color: var(--文字);
+}
+
+.photo-result .result-item:last-child {
+  border-bottom: none;
+}
+
+.photo-result .result-item span {
+  color: var(--次要文字);
+}
+
+.photo-result .result-tip {
+  margin-top: 12px;
+  font-size: 0.85rem;
+  color: var(--次要文字);
+}
+
 .demo-note {
   color: var(--次要文字);
   font-size: 0.85rem;

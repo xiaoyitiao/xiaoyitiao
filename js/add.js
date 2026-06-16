@@ -6,6 +6,7 @@ import { 应用数据, 保存数据 } from './store.js';
 import { 生成编号 } from './utils.js';
 import { 播报语音 } from './voice.js';
 import { 切换页面 } from './router.js';
+import { 识别图片文字, 解析药品信息 } from './ocr.js';
 
 // 当前录入方式：voice | photo | manual
 let 当前录入方式 = 'voice';
@@ -117,29 +118,96 @@ function 获取药品图标(名称) {
  * 处理药品照片上传
  * @param {Event} 事件
  */
-export function 处理照片上传(事件) {
+export async function 处理照片上传(事件) {
   const 文件 = 事件.target.files[0];
   if (!文件) return;
 
   const 预览区 = document.getElementById('photoPreview');
-  const 读取器 = new FileReader();
-  读取器.onload = function (e) {
-    预览区.innerHTML = `<img src="${e.target.result}" alt="药品照片">`;
-    预览区.classList.remove('hidden');
-  };
-  读取器.readAsDataURL(文件);
+  const 状态区 = document.getElementById('photoStatus');
+  const 结果区 = document.getElementById('photoResult');
 
-  // TODO: 当前为演示识别结果，后续可接入真实 OCR 或药品识别接口
-  setTimeout(() => {
-    拍照识别结果 = {
-      名称: '阿托伐他汀钙片',
-      剂量: '1片',
-      时间: '20:00',
-      频率: 'daily',
-      备注: '睡前服用'
-    };
-    alert('拍照识别完成：阿托伐他汀钙片，每晚1片，睡前服用');
-  }, 800);
+  // 重置状态
+  拍照识别结果 = null;
+  if (结果区) 结果区.classList.add('hidden');
+
+  const 读取器 = new FileReader();
+  读取器.onload = async function (e) {
+    const 图片数据 = e.target.result;
+    预览区.innerHTML = `<img src="${图片数据}" alt="药品照片">`;
+    预览区.classList.remove('hidden');
+
+    更新识别状态('正在识别药品文字，请稍候...');
+
+    try {
+      const 识别文字 = await 识别图片文字(图片数据, (进度) => {
+        if (进度.status === 'recognizing text') {
+          const 百分比 = Math.round(进度.progress * 100);
+          更新识别状态(`正在识别药品文字... ${百分比}%`);
+        }
+      });
+
+      if (!识别文字.trim()) {
+        更新识别状态('未能识别到文字，请尝试上传更清晰的照片，或改用语音、手动输入。', true);
+        return;
+      }
+
+      更新识别状态('识别到文字，正在解析药品信息...');
+      const 药品信息 = await 解析药品信息(识别文字);
+
+      if (药品信息) {
+        拍照识别结果 = 药品信息;
+        拍照识别结果.图标 = 获取药品图标(药品信息.名称);
+        显示识别结果(药品信息);
+        播报语音(`识别到${药品信息.名称}，${药品信息.时间}服用${药品信息.剂量}，${药品信息.备注}`);
+      } else {
+        更新识别状态('未能解析出药品信息，请尝试上传更清晰的照片，或改用语音、手动输入。', true);
+      }
+    } catch (错误) {
+      console.error('拍照识别失败:', 错误);
+      更新识别状态('识别过程出现错误，请重试或改用其他方式添加。', true);
+    }
+  };
+
+  读取器.onerror = function () {
+    更新识别状态('图片读取失败，请重试。', true);
+  };
+
+  读取器.readAsDataURL(文件);
+}
+
+/**
+ * 更新识别状态提示
+ * @param {string} 文本
+ * @param {boolean} 是否错误
+ */
+function 更新识别状态(文本, 是否错误 = false) {
+  const 状态区 = document.getElementById('photoStatus');
+  if (!状态区) return;
+  状态区.textContent = 文本;
+  状态区.classList.remove('hidden');
+  状态区.classList.toggle('error', 是否错误);
+}
+
+/**
+ * 显示识别结果
+ * @param {Object} 药品信息
+ */
+function 显示识别结果(药品信息) {
+  const 结果区 = document.getElementById('photoResult');
+  if (!结果区) return;
+
+  结果区.innerHTML = `
+    <div class="result-title">识别结果</div>
+    <div class="result-item"><span>药品名称：</span><strong>${药品信息.名称}</strong></div>
+    <div class="result-item"><span>每次剂量：</span><strong>${药品信息.剂量}</strong></div>
+    <div class="result-item"><span>服药时间：</span><strong>${药品信息.时间}</strong></div>
+    <div class="result-item"><span>服用备注：</span><strong>${药品信息.备注}</strong></div>
+    <p class="result-tip">如信息有误，可在确认前切换到手动输入修改。</p>
+  `;
+  结果区.classList.remove('hidden');
+
+  const 状态区 = document.getElementById('photoStatus');
+  if (状态区) 状态区.classList.add('hidden');
 }
 
 /**
