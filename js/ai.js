@@ -4,13 +4,17 @@
 
 import { 播报语音 } from './voice.js';
 
-// 如需接入真实大模型，修改此配置即可
-export const AI配置 = {
-  启用真实API: false,
-  API地址: '',
-  API密钥: '',
-  模型: ''
-};
+import { 应用数据 } from './store.js';
+
+// 获取当前 AI 配置
+function 获取AI配置() {
+  return 应用数据.AI配置 || {
+    启用真实API: false,
+    API地址: '',
+    API密钥: '',
+    模型: ''
+  };
+}
 
 // 本地用药知识库，用于未接入真实 API 时的关键词匹配回复
 const AI知识库 = {
@@ -70,19 +74,20 @@ function 获取AI回复(问题) {
  * @returns {Promise<string|null>} AI 返回的文本内容
  */
 export async function 请求AI解析(用户内容, 系统提示) {
-  if (!AI配置.启用真实API || !AI配置.API地址 || !AI配置.API密钥) {
+  const 配置 = 获取AI配置();
+  if (!配置.启用真实API || !配置.API地址 || !配置.API密钥) {
     return null;
   }
 
   try {
-    const 响应 = await fetch(AI配置.API地址, {
+    const 响应 = await fetch(配置.API地址, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + AI配置.API密钥
+        'Authorization': 'Bearer ' + 配置.API密钥
       },
       body: JSON.stringify({
-        model: AI配置.模型,
+        model: 配置.模型,
         messages: [
           { role: 'system', content: 系统提示 },
           { role: 'user', content: 用户内容 }
@@ -107,8 +112,9 @@ export async function 发送AI消息(文本) {
   添加聊天消息('user', 文本);
   document.getElementById('chatInput').value = '';
 
+  const 配置 = 获取AI配置();
   let 回复 = '';
-  if (AI配置.启用真实API && AI配置.API地址 && AI配置.API密钥) {
+  if (配置.启用真实API && 配置.API地址 && 配置.API密钥) {
     const 系统提示 = '你是一位专业的用药咨询助手，请用简洁、温和的中文回答老年人或家属的用药问题，注意用药安全提醒。';
     const 解析结果 = await 请求AI解析(文本, 系统提示);
     回复 = 解析结果 || 'AI暂时无法回答';

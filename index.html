@@ -204,6 +204,29 @@
             <input type="checkbox" id="missReminder" checked>
           </label>
         </div>
+
+        <div class="settings-group">
+          <h3>智能接口设置</h3>
+          <p class="setting-desc">配置后，AI 助手和拍照识别可使用真实大模型进行智能回答和药品信息解析。</p>
+          <label class="setting-item">
+            <span>启用真实智能接口</span>
+            <input type="checkbox" id="aiEnabled">
+          </label>
+          <div class="form-group">
+            <label for="aiApiUrl">接口地址</label>
+            <input type="text" id="aiApiUrl" placeholder="如：https://api.example.com/v1/chat/completions">
+          </div>
+          <div class="form-group">
+            <label for="aiApiKey">接口密钥</label>
+            <input type="password" id="aiApiKey" placeholder="输入你的接口密钥">
+          </div>
+          <div class="form-group">
+            <label for="aiModel">模型名称</label>
+            <input type="text" id="aiModel" placeholder="如：gpt-4o、kimi-latest">
+          </div>
+          <button id="aiTestBtn" class="btn-secondary btn-full">测试连接</button>
+          <div id="aiTestResult" class="test-result hidden"></div>
+        </div>
         <div class="settings-group">
           <h3>关于</h3>
           <div class="setting-item">

@@ -17,6 +17,12 @@ export const 默认数据 = {
     长辈模式: false,
     语音播报: true,
     漏服提醒: true
+  },
+  AI配置: {
+    启用真实API: false,
+    API地址: '',
+    API密钥: '',
+    模型: ''
   }
 };
 

@@ -10,7 +10,7 @@ import { 渲染今日用药 } from './today.js';
 import { 切换录入方式, 处理语音添加药品, 处理照片上传, 确认添加药品 } from './add.js';
 import { 发送AI消息 } from './ai.js';
 import { 检查提醒 } from './reminder.js';
-import { 切换长辈模式, 更新模式按钮, 清除所有数据 } from './settings.js';
+import { 切换长辈模式, 更新模式按钮, 清除所有数据, 渲染AI配置表单, 保存AI配置, 测试AI连接 } from './settings.js';
 
 /**
  * 绑定页面事件
@@ -92,6 +92,13 @@ function 绑定事件() {
     保存设置();
   });
 
+  // AI 配置表单
+  document.getElementById('aiEnabled').addEventListener('change', 保存AI配置);
+  document.getElementById('aiApiUrl').addEventListener('change', 保存AI配置);
+  document.getElementById('aiApiKey').addEventListener('change', 保存AI配置);
+  document.getElementById('aiModel').addEventListener('change', 保存AI配置);
+  document.getElementById('aiTestBtn').addEventListener('click', 测试AI连接);
+
   // 清除数据
   document.getElementById('clearDataBtn').addEventListener('click', 清除所有数据);
 
@@ -164,6 +171,9 @@ function 初始化() {
   // 设置开关状态
   document.getElementById('voiceReminder').checked = 应用数据.设置.语音播报;
   document.getElementById('missReminder').checked = 应用数据.设置.漏服提醒;
+
+  // 渲染 AI 配置表单
+  渲染AI配置表单();
 
   // 记录活跃时间
   const 现在 = new Date();
