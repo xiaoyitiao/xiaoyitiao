@@ -1,0 +1,17 @@
+{
+  "name": "zhiyaoban-app",
+  "version": "1.0.0",
+  "description": "一款面向老年人的 AI 用药提醒 Web 应用，采用移动端优先设计，支持语音录入、拍照识别、用药计划、AI 用药助手、家属关怀等功能。",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^8.0.16"
+  }
+}

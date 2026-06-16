@@ -1,0 +1,25 @@
+# 依赖目录
+node_modules
+.pnpm-store
+
+# 构建输出
+dist
+build
+
+# 本地环境
+.env
+.env.local
+
+# 编辑器
+.vscode/settings.json
+.idea
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

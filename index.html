@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>智药伴 - AI老年人用药提醒</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 顶部栏 -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="logo">💊</span>
+        <span class="title">智药伴</span>
+      </div>
+      <div class="header-actions">
+        <button id="modeToggle" class="mode-toggle" aria-label="切换长辈模式">
+          <span class="mode-icon">👴</span>
+          <span class="mode-text">长辈模式</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+      <!-- 今日用药 -->
+      <section id="page-today" class="page active">
+        <div class="date-bar">
+          <h2>今日用药</h2>
+          <p id="todayDate" class="date-text"></p>
+        </div>
+        <div class="progress-card">
+          <div class="progress-info">
+            <span class="progress-label">今日完成</span>
+            <span id="progressText" class="progress-value">0 / 0</span>
+          </div>
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+          </div>
+        </div>
+        <div id="todayList" class="medication-list">
+          <!-- 动态生成 -->
+        </div>
+        <div id="todayEmpty" class="empty-state hidden">
+          <div class="empty-icon">📭</div>
+          <p>今天还没有用药提醒</p>
+          <button class="btn-primary" data-page="add">去添加药品</button>
+        </div>
+      </section>
+
+      <!-- 添加药品 -->
+      <section id="page-add" class="page">
+        <h2>添加药品</h2>
+        <div class="input-methods">
+          <button id="voiceBtn" class="method-btn active">
+            <span class="method-icon">🎤</span>
+            <span>语音录入</span>
+          </button>
+          <button id="photoBtn" class="method-btn">
+            <span class="method-icon">📷</span>
+            <span>拍照识别</span>
+          </button>
+          <button id="manualBtn" class="method-btn">
+            <span class="method-icon">⌨️</span>
+            <span>手动输入</span>
+          </button>
+        </div>
+
+        <!-- 语音录入 -->
+        <div id="voicePanel" class="input-panel">
+          <p class="hint-text">按住下方按钮，说出药品信息，例如：</p>
+          <p class="example-text">"每天早上饭后吃一片阿司匹林"</p>
+          <button id="recordBtn" class="record-btn">
+            <span class="record-icon">🎙️</span>
+            <span id="recordText">按住说话</span>
+          </button>
+          <div id="voiceResult" class="voice-result hidden"></div>
+        </div>
+
+        <!-- 拍照识别 -->
+        <div id="photoPanel" class="input-panel hidden">
+          <p class="hint-text">拍摄或上传药品包装盒照片</p>
+          <label class="upload-area" for="photoInput">
+            <span class="upload-icon">📷</span>
+            <span>点击上传药品照片</span>
+          </label>
+          <input type="file" id="photoInput" accept="image/*" hidden>
+          <div id="photoPreview" class="photo-preview hidden"></div>
+          <p class="demo-note">演示说明：上传后将模拟识别为「阿托伐他汀钙片」</p>
+        </div>
+
+        <!-- 手动输入 -->
+        <div id="manualPanel" class="input-panel hidden">
+          <div class="form-group">
+            <label for="medName">药品名称</label>
+            <input type="text" id="medName" placeholder="如：降压药">
+          </div>
+          <div class="form-group">
+            <label for="medDose">每次剂量</label>
+            <input type="text" id="medDose" placeholder="如：1片">
+          </div>
+          <div class="form-group">
+            <label for="medTime">服药时间</label>
+            <input type="time" id="medTime" value="08:00">
+          </div>
+          <div class="form-group">
+            <label for="medFreq">频率</label>
+            <select id="medFreq">
+              <option value="daily">每天</option>
+              <option value="weekly">每周</option>
+              <option value="once">仅一次</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="medNote">备注</label>
+            <input type="text" id="medNote" placeholder="如：饭后服用">
+          </div>
+        </div>
+
+        <button id="addMedConfirm" class="btn-primary btn-full">确认添加</button>
+      </section>
+
+      <!-- 用药计划 -->
+      <section id="page-schedule" class="page">
+        <h2>用药计划</h2>
+        <div id="scheduleList" class="schedule-list">
+          <!-- 动态生成 -->
+        </div>
+        <div id="scheduleEmpty" class="empty-state hidden">
+          <div class="empty-icon">📋</div>
+          <p>还没有用药计划</p>
+          <button class="btn-primary" data-page="add">添加药品</button>
+        </div>
+      </section>
+
+      <!-- AI助手 -->
+      <section id="page-ai" class="page">
+        <h2>AI用药助手</h2>
+        <div id="chatContainer" class="chat-container">
+          <div class="chat-message ai-message">
+            <div class="chat-avatar">🤖</div>
+            <div class="chat-bubble">
+              <p>您好！我是您的AI用药助手，可以回答用药时间、注意事项等问题。</p>
+            </div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <button id="chatVoiceBtn" class="chat-voice-btn" aria-label="语音提问">🎤</button>
+          <input type="text" id="chatInput" placeholder="输入问题，如：阿司匹林饭前吃还是饭后吃？">
+          <button id="chatSendBtn" class="chat-send-btn">发送</button>
+        </div>
+        <p class="demo-note">演示说明：未配置API密钥时使用本地智能回复</p>
+      </section>
+
+      <!-- 家属关怀 -->
+      <section id="page-family" class="page">
+        <h2>家属关怀</h2>
+        <div class="family-card">
+          <div class="family-header">
+            <span class="family-avatar">👴</span>
+            <div class="family-info">
+              <p class="family-name">家中老人</p>
+              <p id="lastActive" class="family-status">今日未登录</p>
+            </div>
+          </div>
+          <div class="family-stats">
+            <div class="stat-item">
+              <span id="familyTotal" class="stat-value">0</span>
+              <span class="stat-label">今日应服</span>
+            </div>
+            <div class="stat-item">
+              <span id="familyTaken" class="stat-value">0</span>
+              <span class="stat-label">已服</span>
+            </div>
+            <div class="stat-item">
+              <span id="familyMissed" class="stat-value">0</span>
+              <span class="stat-label">漏服</span>
+            </div>
+          </div>
+          <div id="familyAlert" class="family-alert hidden">
+            <span>⚠️</span>
+            <span>检测到漏服药品，请及时联系老人</span>
+          </div>
+        </div>
+        <div id="familyList" class="family-list">
+          <!-- 动态生成 -->
+        </div>
+      </section>
+
+      <!-- 设置 -->
+      <section id="page-settings" class="page">
+        <h2>设置</h2>
+        <div class="settings-group">
+          <h3>提醒设置</h3>
+          <label class="setting-item">
+            <span>语音播报提醒</span>
+            <input type="checkbox" id="voiceReminder" checked>
+          </label>
+          <label class="setting-item">
+            <span>漏服再次提醒（30分钟后）</span>
+            <input type="checkbox" id="missReminder" checked>
+          </label>
+        </div>
+        <div class="settings-group">
+          <h3>关于</h3>
+          <div class="setting-item">
+            <span>版本</span>
+            <span class="setting-value">v1.0.0 演示版</span>
+          </div>
+          <p class="about-text">
+            智药伴是一款面向老年人的AI用药提醒Web应用，支持语音录入、智能计划、家属关怀等功能。
+          </p>
+        </div>
+        <button id="clearDataBtn" class="btn-danger btn-full">清除所有数据</button>
+      </section>
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-page="today">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">今日</span>
+      </button>
+      <button class="nav-item" data-page="add">
+        <span class="nav-icon">➕</span>
+        <span class="nav-label">添加</span>
+      </button>
+      <button class="nav-item" data-page="schedule">
+        <span class="nav-icon">📅</span>
+        <span class="nav-label">计划</span>
+      </button>
+      <button class="nav-item" data-page="ai">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-label">AI</span>
+      </button>
+      <button class="nav-item" data-page="family">
+        <span class="nav-icon">👨‍👩‍👧</span>
+        <span class="nav-label">关怀</span>
+      </button>
+      <button class="nav-item" data-page="settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">设置</span>
+      </button>
+    </nav>
+
+    <!-- 提醒弹窗 -->
+    <div id="reminderModal" class="modal hidden">
+      <div class="modal-content">
+        <div class="modal-icon">💊</div>
+        <h3 id="reminderTitle">该吃药了</h3>
+        <p id="reminderBody" class="modal-body"></p>
+        <div class="modal-actions">
+          <button id="reminderTaken" class="btn-primary">我已服用</button>
+          <button id="reminderLater" class="btn-secondary">稍后提醒</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

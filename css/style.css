@@ -1,0 +1,779 @@
+/* 全局变量 */
+:root {
+  --主色: #2e8b57;
+  --主色深: #1f6b41;
+  --强调色: #ff9500;
+  --背景: #f5f7fa;
+  --卡片背景: #ffffff;
+  --文字: #333333;
+  --次要文字: #666666;
+  --边框: #e0e0e0;
+  --危险色: #e74c3c;
+  --成功色: #27ae60;
+  --字体大小: 16px;
+  --大字体: 18px;
+  --超大字体: 22px;
+  --按钮高度: 48px;
+  --圆角: 12px;
+}
+
+/* 长辈模式变量 */
+body.elderly-mode {
+  --背景: #fffbe6;
+  --卡片背景: #fff9c4;
+  --文字: #000000;
+  --次要文字: #333333;
+  --边框: #b8860b;
+  --字体大小: 22px;
+  --大字体: 26px;
+  --超大字体: 32px;
+  --按钮高度: 64px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--字体大小);
+}
+
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--背景);
+  color: var(--文字);
+  line-height: 1.6;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: none;
+}
+
+input, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding-bottom: 80px;
+}
+
+/* 顶部栏 */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: var(--卡片背景);
+  border-bottom: 1px solid var(--边框);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo {
+  font-size: var(--超大字体);
+}
+
+.title {
+  font-size: var(--大字体);
+  font-weight: 700;
+  color: var(--主色);
+}
+
+.mode-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background-color: var(--背景);
+  border: 1px solid var(--边框);
+  color: var(--文字);
+  font-size: 0.9rem;
+}
+
+body.elderly-mode .mode-toggle {
+  background-color: #000;
+  color: #fff;
+  border-color: #000;
+  padding: 10px 16px;
+}
+
+/* 主内容 */
+.main-content {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.page {
+  display: none;
+  animation: 淡入 0.2s ease;
+}
+
+.page.active {
+  display: block;
+}
+
+@keyframes 淡入 {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h2 {
+  font-size: var(--超大字体);
+  margin-bottom: 16px;
+  color: var(--文字);
+}
+
+h3 {
+  font-size: var(--大字体);
+  margin-bottom: 12px;
+}
+
+/* 今日用药 */
+.date-bar {
+  margin-bottom: 16px;
+}
+
+.date-text {
+  color: var(--次要文字);
+  font-size: 0.95rem;
+}
+
+.progress-card {
+  background-color: var(--卡片背景);
+  border-radius: var(--圆角);
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--边框);
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.progress-label {
+  color: var(--次要文字);
+}
+
+.progress-value {
+  font-weight: 700;
+  color: var(--主色);
+}
+
+.progress-bar {
+  height: 12px;
+  background-color: var(--背景);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--主色), var(--主色深));
+  border-radius: 6px;
+  transition: width 0.3s ease;
+}
+
+/* 药品卡片 */
+.medication-list, .schedule-list, .family-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.med-card {
+  background-color: var(--卡片背景);
+  border-radius: var(--圆角);
+  padding: 16px;
+  border: 1px solid var(--边框);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.med-icon {
+  font-size: var(--超大字体);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--背景);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.med-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.med-name {
+  font-size: var(--大字体);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.med-detail {
+  color: var(--次要文字);
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.med-status {
+  flex-shrink: 0;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.status-badge.待服 {
+  background-color: #fff3e0;
+  color: var(--强调色);
+}
+
+.status-badge.已服 {
+  background-color: #e8f5e9;
+  color: var(--成功色);
+}
+
+.status-badge.漏服 {
+  background-color: #ffebee;
+  color: var(--危险色);
+}
+
+.check-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--主色);
+  color: #fff;
+  font-size: var(--大字体);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 48px 16px;
+  color: var(--次要文字);
+}
+
+.empty-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+}
+
+.empty-state p {
+  margin-bottom: 20px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* 按钮 */
+.btn-primary, .btn-secondary, .btn-danger {
+  height: var(--按钮高度);
+  padding: 0 20px;
+  border-radius: var(--圆角);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-primary {
+  background-color: var(--主色);
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: var(--背景);
+  color: var(--文字);
+  border: 1px solid var(--边框);
+}
+
+.btn-danger {
+  background-color: var(--危险色);
+  color: #fff;
+}
+
+.btn-full {
+  width: 100%;
+  margin-top: 16px;
+}
+
+/* 添加药品 */
+.input-methods {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.method-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 4px;
+  background-color: var(--卡片背景);
+  border: 1px solid var(--边框);
+  border-radius: var(--圆角);
+  color: var(--次要文字);
+}
+
+.method-btn.active {
+  border-color: var(--主色);
+  color: var(--主色);
+  background-color: #e8f5e9;
+}
+
+.method-icon {
+  font-size: var(--超大字体);
+}
+
+.input-panel {
+  background-color: var(--卡片背景);
+  border-radius: var(--圆角);
+  padding: 16px;
+  border: 1px solid var(--边框);
+  margin-bottom: 16px;
+}
+
+.hint-text {
+  color: var(--次要文字);
+  margin-bottom: 8px;
+}
+
+.example-text {
+  color: var(--主色);
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding: 10px;
+  background-color: var(--背景);
+  border-radius: 8px;
+}
+
+.record-btn {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--主色), var(--主色深));
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+  box-shadow: 0 8px 20px rgba(46, 139, 87, 0.3);
+  transition: transform 0.1s;
+}
+
+.record-btn:active {
+  transform: scale(0.96);
+}
+
+.record-btn.recording {
+  background: linear-gradient(135deg, var(--危险色), #c0392b);
+  animation: 录音中 1s infinite;
+}
+
+@keyframes 录音中 {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4); }
+  50% { box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+}
+
+.record-icon {
+  font-size: 40px;
+}
+
+.voice-result {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: var(--背景);
+  border-radius: 8px;
+  color: var(--文字);
+}
+
+.upload-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px;
+  border: 2px dashed var(--边框);
+  border-radius: var(--圆角);
+  background-color: var(--背景);
+  color: var(--次要文字);
+  cursor: pointer;
+}
+
+.upload-icon {
+  font-size: 40px;
+}
+
+.photo-preview {
+  margin-top: 12px;
+  text-align: center;
+}
+
+.photo-preview img {
+  max-width: 100%;
+  border-radius: var(--圆角);
+}
+
+.demo-note {
+  color: var(--次要文字);
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+/* 表单 */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: var(--按钮高度);
+  padding: 0 12px;
+  border: 1px solid var(--边框);
+  border-radius: var(--圆角);
+  background-color: var(--背景);
+  color: var(--文字);
+}
+
+/* AI 助手 */
+.chat-container {
+  background-color: var(--卡片背景);
+  border-radius: var(--圆角);
+  border: 1px solid var(--边框);
+  height: 420px;
+  overflow-y: auto;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-message {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.chat-message.user-message {
+  flex-direction: row-reverse;
+}
+
+.chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--背景);
+  flex-shrink: 0;
+  font-size: 1.2rem;
+}
+
+.user-message .chat-avatar {
+  background-color: var(--主色);
+}
+
+.chat-bubble {
+  max-width: 75%;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: var(--背景);
+  color: var(--文字);
+  line-height: 1.5;
+}
+
+.user-message .chat-bubble {
+  background-color: var(--主色);
+  color: #fff;
+}
+
+.chat-input-area {
+  display: flex;
+  gap: 8px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  height: var(--按钮高度);
+  padding: 0 12px;
+  border: 1px solid var(--边框);
+  border-radius: var(--圆角);
+  background-color: var(--卡片背景);
+  color: var(--文字);
+}
+
+.chat-voice-btn,
+.chat-send-btn {
+  height: var(--按钮高度);
+  width: var(--按钮高度);
+  border-radius: var(--圆角);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-voice-btn {
+  background-color: var(--背景);
+  border: 1px solid var(--边框);
+  font-size: var(--大字体);
+}
+
+.chat-send-btn {
+  background-color: var(--主色);
+  color: #fff;
+  font-weight: 600;
+  width: auto;
+  padding: 0 16px;
+}
+
+/* 家属关怀 */
+.family-card {
+  background-color: var(--卡片背景);
+  border-radius: var(--圆角);
+  padding: 16px;
+  border: 1px solid var(--边框);
+  margin-bottom: 16px;
+}
+
+.family-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.family-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--背景);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.family-name {
+  font-size: var(--大字体);
+  font-weight: 700;
+}
+
+.family-status {
+  color: var(--次要文字);
+}
+
+.family-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  display: block;
+  font-size: var(--超大字体);
+  font-weight: 700;
+  color: var(--主色);
+}
+
+.stat-label {
+  color: var(--次要文字);
+  font-size: 0.9rem;
+}
+
+.family-alert {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #ffebee;
+  color: var(--危险色);
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* 设置 */
+.settings-group {
+  background-color: var(--卡片背景);
+  border-radius: var(--圆角);
+  padding: 16px;
+  border: 1px solid var(--边框);
+  margin-bottom: 16px;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--边框);
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-value {
+  color: var(--次要文字);
+}
+
+.about-text {
+  color: var(--次要文字);
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+/* 底部导航 */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background-color: var(--卡片背景);
+  border-top: 1px solid var(--边框);
+  display: flex;
+  justify-content: space-around;
+  padding: 6px 0;
+  z-index: 100;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 8px;
+  color: var(--次要文字);
+  font-size: 0.75rem;
+}
+
+.nav-item.active {
+  color: var(--主色);
+}
+
+.nav-icon {
+  font-size: var(--大字体);
+}
+
+/* 弹窗 */
+.modal {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
+}
+
+.modal-content {
+  background-color: var(--卡片背景);
+  border-radius: var(--圆角);
+  padding: 28px;
+  width: 100%;
+  max-width: 340px;
+  text-align: center;
+}
+
+.modal-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+}
+
+.modal-body {
+  color: var(--次要文字);
+  margin: 12px 0 24px;
+  font-size: var(--大字体);
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 长辈模式增强 */
+body.elderly-mode .btn-primary,
+body.elderly-mode .btn-secondary,
+body.elderly-mode .btn-danger {
+  font-size: var(--大字体);
+}
+
+body.elderly-mode .nav-item {
+  font-size: 0.95rem;
+}
+
+body.elderly-mode .med-detail,
+body.elderly-mode .date-text,
+body.elderly-mode .hint-text,
+body.elderly-mode .demo-note {
+  font-size: 1.1rem;
+}
+
+body.elderly-mode .chat-container {
+  height: 360px;
+}
