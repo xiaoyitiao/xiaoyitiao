@@ -1,0 +1,48 @@
+# 依赖目录
+node_modules
+.pnpm-store
+
+# 前端构建输出（用于 GitHub Pages 部署，不排除）
+# dist
+# build
+
+# 后端构建输出
+backend/target/
+backend/tools/
+*.class
+
+# 本地环境配置（敏感信息）
+.env
+.env.local
+backend/.env
+backend/.env.local
+
+# 编辑器配置
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+test-output.txt
+
+# 数据库文件
+*.db
+*.sqlite
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# 临时文件
+*.tmp
+*.bak
