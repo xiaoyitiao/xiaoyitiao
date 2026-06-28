@@ -4,10 +4,18 @@
  * IndexedDB存储、"稍后提醒"明确时长、iOS兼容降级、ARIA无障碍、错误边界
  */
 
+// ===== 工具函数 =====
+function showToast(message) {
+  let toast = document.getElementById('toast');
+  if(!toast) { toast=document.createElement('div'); toast.id='toast'; toast.className='toast'; document.body.appendChild(toast); }
+  toast.textContent=message; toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'), 3000);
+}
+
 // ===== 错误边界 =====
 window.onerror = function(msg, url, line, col, error) {
   console.error('[智药伴错误]', msg, line, error);
-  showToast('出现了一个小问题，请稍后重试');
+  try { showToast('出现了一个小问题，请稍后重试'); } catch(e) {}
   return true;
 };
 window.addEventListener('unhandledrejection', function(e) {
@@ -1524,14 +1532,6 @@ const ReminderSystem = {
     rec.start();
   }
 };
-
-// ===== Toast =====
-function showToast(message) {
-  let toast = document.getElementById('toast');
-  if(!toast) { toast=document.createElement('div'); toast.id='toast'; toast.className='toast'; document.body.appendChild(toast); }
-  toast.textContent=message; toast.classList.add('show');
-  setTimeout(()=>toast.classList.remove('show'), 3000);
-}
 
 // ===== 初始化 =====
 document.addEventListener('DOMContentLoaded', async () => {
