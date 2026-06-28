@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 
 // Vite 配置文件
 export default defineConfig({
-  // 部署基础路径（GitHub Pages 使用 /xiaoyitiao/）
-  base: '/xiaoyitiao/',
+  // 部署基础路径（使用相对路径适配 GitHub Pages）
+  base: '',
   
   // 开发服务器配置
   server: {

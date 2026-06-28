@@ -82,7 +82,6 @@
     </button>
   </nav>
 
-  <!-- 提醒弹窗 -->
   <div class="reminder-modal" id="reminderModal" role="alertdialog" aria-modal="true" aria-labelledby="reminderTitle">
     <div class="reminder-content reminder-shake">
       <div class="reminder-title" id="reminderTitle">该吃药啦</div>
@@ -101,14 +100,12 @@
     </div>
   </div>
 
-  <!-- 隐私协议（非阻断式，底部条） -->
   <div class="privacy-bar" id="privacyBar" role="complementary" aria-label="隐私协议">
     <span>使用本应用即表示同意</span>
     <button onclick="PrivacyModal.show()" class="privacy-bar-link">《隐私协议与免责声明》</button>
     <button onclick="PrivacyModal.agree()" class="privacy-bar-close" aria-label="关闭">知道了</button>
   </div>
 
-  <!-- 隐私协议详情弹窗 -->
   <div class="privacy-modal" id="privacyModal" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
     <div class="privacy-content">
       <h2 id="privacyTitle">隐私协议与免责声明</h2>
@@ -145,7 +142,6 @@
         setTimeout(() => s.remove(), 600);
       }, 1200);
     });
-    // 首次使用显示隐私条，回访不再显示
     if (localStorage.getItem('zyb_privacy_agreed')) {
       document.getElementById('privacyBar').style.display = 'none';
     }
