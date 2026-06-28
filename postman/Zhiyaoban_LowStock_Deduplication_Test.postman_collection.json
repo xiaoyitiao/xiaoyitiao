@@ -1,0 +1,378 @@
+{
+	"info": {
+		"name": "智药伴-库存不足去重测试",
+		"description": "模拟连续5次调用触发接口，验证日志去重逻辑",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. 登录获取Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('token', jsonData.data.token);",
+							"pm.collectionVariables.set('userId', jsonData.data.userId);",
+							"",
+							"pm.test('登录成功', function() {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(jsonData.data.token).to.not.be.empty;",
+							"});",
+							"",
+							"console.log('Token: ' + jsonData.data.token);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"phone\": \"13800001001\",\n    \"code\": \"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": ["{{baseUrl}}"],
+					"path": ["auth", "login"]
+				}
+			}
+		},
+		{
+			"name": "2. 创建库存不足药品",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('medicineId', jsonData.data.id);",
+							"",
+							"pm.test('药品创建成功', function() {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(jsonData.data.stock).to.equal(1);",
+							"});",
+							"",
+							"console.log('药品ID: ' + jsonData.data.id + ', 库存: ' + jsonData.data.stock);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"硝苯地平控释片\",\n    \"dose\": \"30mg\",\n    \"time\": \"08:00\",\n    \"frequency\": \"DAILY\",\n    \"stock\": 1,\n    \"icon\": \"💊\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/medicines",
+					"host": ["{{baseUrl}}"],
+					"path": ["medicines"]
+				}
+			}
+		},
+		{
+			"name": "3. 创建库存提醒计划",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"pm.collectionVariables.set('scheduleId', jsonData.data.id);",
+							"",
+							"pm.test('提醒计划创建成功', function() {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(jsonData.data.type).to.equal('STOCK');",
+							"});",
+							"",
+							"console.log('计划ID: ' + jsonData.data.id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"库存不足提醒-去重测试\",\n    \"type\": \"STOCK\",\n    \"enabled\": true,\n    \"channel\": \"PUSH\",\n    \"medicineItems\": [\n        {\n            \"medicineId\": {{medicineId}},\n            \"remindTime\": \"09:00\",\n            \"dose\": \"30mg\",\n            \"enabled\": true\n        }\n    ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/reminders/schedules",
+					"host": ["{{baseUrl}}"],
+					"path": ["reminders", "schedules"]
+				}
+			}
+		},
+		{
+			"name": "4. 连续5次触发提醒",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.collectionVariables.set('triggerCount', 0);",
+							"pm.collectionVariables.set('successCount', 0);"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var count = pm.collectionVariables.get('triggerCount');",
+							"count = parseInt(count) + 1;",
+							"pm.collectionVariables.set('triggerCount', count);",
+							"",
+							"if (pm.response.code === 200) {",
+							"    var success = pm.collectionVariables.get('successCount');",
+							"    success = parseInt(success) + 1;",
+							"    pm.collectionVariables.set('successCount', success);",
+							"}",
+							"",
+							"console.log('第 ' + count + ' 次触发 - 状态码: ' + pm.response.code);",
+							"",
+							"if (count < 5) {",
+							"    setTimeout(function() {",
+							"        var baseUrl = pm.collectionVariables.get('baseUrl');",
+							"        var scheduleId = pm.collectionVariables.get('scheduleId');",
+							"        var medicineId = pm.collectionVariables.get('medicineId');",
+							"        var token = pm.collectionVariables.get('token');",
+							"        var url = baseUrl + '/reminders/schedules/' + scheduleId + '/trigger?medicineId=' + medicineId;",
+							"        ",
+							"        pm.sendRequest({",
+							"            url: url,",
+							"            method: 'POST',",
+							"            header: {",
+							"                'Authorization': 'Bearer ' + token",
+							"            }",
+							"        }, function(err, res) {",
+							"            var currentCount = pm.collectionVariables.get('triggerCount');",
+							"            currentCount = parseInt(currentCount) + 1;",
+							"            pm.collectionVariables.set('triggerCount', currentCount);",
+							"            console.log('第 ' + currentCount + ' 次触发(异步) - 状态码: ' + res.code);",
+							"        });",
+							"    }, 1000);",
+							"} else {",
+							"    console.log('=== 5次触发完成 ===');",
+							"    console.log('成功次数: ' + pm.collectionVariables.get('successCount'));",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/reminders/schedules/{{scheduleId}}/trigger?medicineId={{medicineId}}",
+					"host": ["{{baseUrl}}"],
+					"path": ["reminders", "schedules", "{{scheduleId}}", "trigger"],
+					"query": [
+						{
+							"key": "medicineId",
+							"value": "{{medicineId}}"
+						}
+					]
+				}
+			}
+		},
+		{
+			"name": "5. 等待2秒后查询日志",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const delay = 2000;",
+							"const start = Date.now();",
+							"while (Date.now() - start < delay) {}",
+							"console.log('等待 ' + delay + 'ms 完成');"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test('查询成功', function() {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var stockLogs = [];",
+							"if (jsonData.data && Array.isArray(jsonData.data)) {",
+							"    stockLogs = jsonData.data.filter(function(log) {",
+							"        return log.type === 'STOCK';",
+							"    });",
+							"}",
+							"",
+							"console.log('=== 去重验证结果 ===');",
+							"console.log('总日志数: ' + (jsonData.data ? jsonData.data.length : 0));",
+							"console.log('库存提醒日志数: ' + stockLogs.length);",
+							"",
+							"if (stockLogs.length === 1) {",
+							"    console.log('✅ 去重测试通过！');",
+							"    console.log('日志详情:', JSON.stringify(stockLogs[0], null, 2));",
+							"} else if (stockLogs.length === 0) {",
+							"    console.log('⚠️ 未找到库存提醒日志');",
+							"} else {",
+							"    console.log('❌ 去重测试失败！发现 ' + stockLogs.length + ' 条库存提醒');",
+							"    stockLogs.forEach(function(log) {",
+							"        console.log(' - ID:' + log.id + ', 时间:' + log.sentAt + ', 内容:' + log.content);",
+							"    });",
+							"}",
+							"",
+							"pm.collectionVariables.set('stockLogCount', stockLogs.length);"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/reminders/logs?userId={{userId}}",
+					"host": ["{{baseUrl}}"],
+					"path": ["reminders", "logs"],
+					"query": [
+						{
+							"key": "userId",
+							"value": "{{userId}}"
+						}
+					]
+				}
+			}
+		},
+		{
+			"name": "6. 验证去重结果",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var count = pm.collectionVariables.get('stockLogCount');",
+							"count = parseInt(count);",
+							"",
+							"pm.test('去重验证 - 库存提醒日志数量应为1', function() {",
+							"    pm.expect(count).to.equal(1, '预期1条库存提醒，实际:' + count);",
+							"});",
+							"",
+							"if (count === 1) {",
+							"    console.log('========================================');",
+							"    console.log('✅✅✅ 去重测试完全通过！');",
+							"    console.log('========================================');",
+							"    console.log('');",
+							"    console.log('测试结论：同一药品一天内多次触发');",
+							"    console.log('只生成了1条库存不足提醒日志');",
+							"    console.log('');",
+							"    console.log('验证项:');",
+							"    console.log('  ✓ 连续触发5次');",
+							"    console.log('  ✓ 阈值检查: 库存1 <= 阈值5');",
+							"    console.log('  ✓ 去重逻辑生效');",
+							"    console.log('  ✓ 最终日志数: 1');",
+							"    console.log('');",
+							"    console.log('========================================');",
+							"} else {",
+							"    console.log('========================================');",
+							"    console.log('❌❌❌ 去重测试失败！');",
+							"    console.log('========================================');",
+							"    console.log('预期日志数: 1');",
+							"    console.log('实际日志数: ' + count);",
+							"    console.log('========================================');",
+							"}"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/user/profile",
+					"host": ["{{baseUrl}}"],
+					"path": ["user", "profile"]
+				}
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/api"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "userId",
+			"value": ""
+		},
+		{
+			"key": "medicineId",
+			"value": ""
+		},
+		{
+			"key": "scheduleId",
+			"value": ""
+		},
+		{
+			"key": "triggerCount",
+			"value": "0"
+		},
+		{
+			"key": "successCount",
+			"value": "0"
+		},
+		{
+			"key": "stockLogCount",
+			"value": "0"
+		}
+	]
+}

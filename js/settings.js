@@ -1,11 +1,19 @@
 /**
  * 设置模块
+ *
+ * 改进：
+ * 1. 敏感字段（API 密钥、LeanCloud 密钥、查看密码）加密存储。
+ * 2. 云端同步与家属查看改为异步初始化。
+ * 3. 清除数据按钮放入高级操作，清除前自动导出备份。
+ * 4. 增加数据导出/导入、隐私政策、演示模式切换、后端代理配置。
+ * 5. 所有动态文本使用 textContent 或转义HTML。
  */
 
-import { 应用数据, 保存数据, 创建默认数据副本, 存储键 } from './store.js';
+import { 应用数据, 保存数据, 创建默认数据副本, 存储键, 导出数据, 导入数据 } from './store.js';
 import { 渲染今日用药 } from './today.js';
-import { 初始化云服务, 上传家庭数据, 查询家庭数据 } from './cloud.js';
+import { 初始化云服务, 上传家庭数据, 查询家庭数据, 重置云服务状态 } from './cloud.js';
 import { 获取今天日期, 获取当前时间字符串 } from './utils.js';
+import { 转义HTML, 安全设置文本 } from './security.js';
 
 /**
  * 切换长辈模式
@@ -23,11 +31,11 @@ export function 切换长辈模式() {
 export function 更新模式按钮() {
   const 按钮 = document.getElementById('modeToggle');
   if (应用数据.设置.长辈模式) {
-    按钮.querySelector('.mode-icon').textContent = '👓';
-    按钮.querySelector('.mode-text').textContent = '普通模式';
+    安全设置文本(按钮.querySelector('.mode-icon'), '👓');
+    安全设置文本(按钮.querySelector('.mode-text'), '普通模式');
   } else {
-    按钮.querySelector('.mode-icon').textContent = '👴';
-    按钮.querySelector('.mode-text').textContent = '长辈模式';
+    安全设置文本(按钮.querySelector('.mode-icon'), '👴');
+    安全设置文本(按钮.querySelector('.mode-text'), '长辈模式');
   }
 }
 
@@ -36,21 +44,27 @@ export function 更新模式按钮() {
  */
 export function 渲染AI配置表单() {
   const 配置 = 应用数据.AI配置 || {};
-  document.getElementById('aiEnabled').checked = !!配置.启用真实API;
-  document.getElementById('aiApiUrl').value = 配置.API地址 || '';
-  document.getElementById('aiApiKey').value = 配置.API密钥 || '';
-  document.getElementById('aiModel').value = 配置.模型 || '';
+  const 启用开关 = document.getElementById('aiEnabled');
+  if (启用开关) 启用开关.checked = !!配置.启用真实API;
+  const 地址输入 = document.getElementById('aiApiUrl');
+  if (地址输入) 地址输入.value = 配置.API地址 || '';
+  const 模型输入 = document.getElementById('aiModel');
+  if (模型输入) 模型输入.value = 配置.模型 || '';
 }
 
 /**
  * 保存 AI 配置到本地数据
  */
 export function 保存AI配置() {
+  const 启用开关 = document.getElementById('aiEnabled');
+  const 地址输入 = document.getElementById('aiApiUrl');
+  const 模型输入 = document.getElementById('aiModel');
+
   应用数据.AI配置 = {
-    启用真实API: document.getElementById('aiEnabled').checked,
-    API地址: document.getElementById('aiApiUrl').value.trim(),
-    API密钥: document.getElementById('aiApiKey').value.trim(),
-    模型: document.getElementById('aiModel').value.trim()
+    启用真实API: 启用开关 ? 启用开关.checked : false,
+    API地址: 地址输入 ? 地址输入.value.trim() : '',
+    API密钥: '',
+    模型: 模型输入 ? 模型输入.value.trim() : ''
   };
   保存数据();
 }
@@ -63,7 +77,8 @@ export function 保存AI配置() {
  */
 function 显示状态(元素ID, 文本, 是否成功) {
   const 结果区 = document.getElementById(元素ID);
-  结果区.textContent = 文本;
+  if (!结果区) return;
+  安全设置文本(结果区, 文本);
   结果区.classList.remove('hidden');
   结果区.classList.toggle('success', 是否成功);
   结果区.classList.toggle('error', !是否成功);
@@ -74,27 +89,29 @@ function 显示状态(元素ID, 文本, 是否成功) {
  */
 export async function 测试AI连接() {
   const 配置 = 应用数据.AI配置 || {};
-  if (!配置.API地址 || !配置.API密钥) {
-    显示状态('aiTestResult', '请先填写接口地址和密钥', false);
+  if (!配置.API地址) {
+    显示状态('aiTestResult', '请先填写接口地址', false);
     return;
   }
 
   显示状态('aiTestResult', '正在测试连接...', false);
 
   try {
-    const 响应 = await fetch(配置.API地址, {
+    const 请求选项 = {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + 配置.API密钥
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 配置.模型,
-        messages: [
-          { role: 'user', content: '你好' }
-        ]
+        messages: [{ role: 'user', content: '你好' }]
       })
-    });
+    };
+
+    const 是代理模式 = 配置.API地址.includes('/proxy') || !配置.API密钥;
+    if (!是代理模式) {
+      请求选项.headers['Authorization'] = 'Bearer ' + 配置.API密钥;
+    }
+
+    const 响应 = await fetch(配置.API地址, 请求选项);
 
     if (!响应.ok) {
       const 错误信息 = await 响应.text();
@@ -126,6 +143,8 @@ export function 渲染云端配置表单() {
   document.getElementById('cloudServer').value = 设置.服务地址 || '';
   document.getElementById('familyId').value = 设置.家庭编号 || '';
   document.getElementById('familyPassword').value = 设置.查看密码 || '';
+  const 紧急联系人输入 = document.getElementById('emergencyContact');
+  if (紧急联系人输入) 紧急联系人输入.value = 设置.紧急联系人 || '';
 }
 
 /**
@@ -138,7 +157,10 @@ export function 保存云端配置() {
   应用数据.设置.服务地址 = document.getElementById('cloudServer').value.trim();
   应用数据.设置.家庭编号 = document.getElementById('familyId').value.trim();
   应用数据.设置.查看密码 = document.getElementById('familyPassword').value.trim();
+  const 紧急联系人输入 = document.getElementById('emergencyContact');
+  应用数据.设置.紧急联系人 = 紧急联系人输入 ? 紧急联系人输入.value.trim() : '';
   保存数据();
+  重置云服务状态();
 }
 
 /**
@@ -148,7 +170,7 @@ export async function 同步到云端() {
   保存云端配置();
   const 设置 = 应用数据.设置;
 
-  const 初始化成功 = 初始化云服务({
+  const 初始化成功 = await 初始化云服务({
     应用ID: 设置.应用ID,
     应用密钥: 设置.应用密钥,
     服务地址: 设置.服务地址
@@ -180,7 +202,7 @@ export async function 同步到云端() {
 export async function 家属远程查看() {
   const 设置 = 应用数据.设置;
 
-  const 初始化成功 = 初始化云服务({
+  const 初始化成功 = await 初始化云服务({
     应用ID: 设置.应用ID,
     应用密钥: 设置.应用密钥,
     服务地址: 设置.服务地址
@@ -233,42 +255,97 @@ function 渲染远程查看结果(远程数据) {
   let 已服 = 0;
   let 漏服 = 0;
 
-  let 药品HTML = '';
+  结果区.innerHTML = '';
+
+  const 头部 = document.createElement('div');
+  头部.className = 'remote-view-header';
+
+  const 标题 = document.createElement('h4');
+  标题.textContent = '老人今日用药情况';
+  头部.appendChild(标题);
+
+  const 统计区 = document.createElement('div');
+  统计区.className = 'remote-view-stats';
+
+  const 创建统计 = (值, 标签) => {
+    const 项 = document.createElement('div');
+    项.className = 'remote-stat';
+    const 强 = document.createElement('strong');
+    强.textContent = String(值);
+    const 文字 = document.createElement('span');
+    文字.textContent = 标签;
+    项.appendChild(强);
+    项.appendChild(文字);
+    return 项;
+  };
+
+  统计区.appendChild(创建统计(药品列表.length, '应服'));
+  统计区.appendChild(创建统计(已服, '已服'));
+  统计区.appendChild(创建统计(漏服, '漏服'));
+  头部.appendChild(统计区);
+
+  if (漏服 > 0) {
+    const 预警 = document.createElement('div');
+    预警.className = 'remote-alert';
+    预警.textContent = '⚠️ 检测到漏服药品，请及时联系老人';
+    头部.appendChild(预警);
+  }
+
+  const 药品容器 = document.createElement('div');
+  药品容器.className = 'remote-med-list';
+
   const 排序列表 = [...药品列表].sort((a, b) => a.时间.localeCompare(b.时间));
-  排序列表.forEach(药品 => {
-    const 键 = `${药品.编号}_${今日}`;
-    const 已打卡 = 打卡记录[键] === true;
-    if (已打卡) {
-      已服++;
-    } else if (药品.时间 < 当前时间) {
-      漏服++;
-    }
-    const 状态 = 已打卡 ? '已服' : (药品.时间 < 当前时间 ? '漏服' : '待服');
+  if (排序列表.length === 0) {
+    const 空提示 = document.createElement('p');
+    空提示.className = 'empty-tip';
+    空提示.textContent = '暂无用药数据';
+    药品容器.appendChild(空提示);
+  } else {
+    排序列表.forEach(药品 => {
+      const 键 = `${药品.编号}_${今日}`;
+      const 打卡信息 = 打卡记录[键];
+      const 已打卡 = !!(打卡信息 === true || (打卡信息 && 打卡信息.时间戳));
+      if (已打卡) {
+        已服++;
+      } else if (药品.时间 < 当前时间) {
+        漏服++;
+      }
+      const 状态 = 已打卡 ? '已服' : (药品.时间 < 当前时间 ? '漏服' : '待服');
 
-    药品HTML += `
-      <div class="remote-med-card">
-        <div class="remote-med-icon">${药品.图标 || '💊'}</div>
-        <div class="remote-med-info">
-          <div class="remote-med-name">${药品.名称}</div>
-          <div class="remote-med-detail">${药品.时间} · ${药品.剂量} · ${药品.备注}</div>
-        </div>
-        <span class="status-badge ${状态}">${状态}</span>
-      </div>
-    `;
-  });
+      const 卡片 = document.createElement('div');
+      卡片.className = 'remote-med-card';
 
-  结果区.innerHTML = `
-    <div class="remote-view-header">
-      <h4>老人今日用药情况</h4>
-      <div class="remote-view-stats">
-        <div class="remote-stat"><strong>${药品列表.length}</strong><span>应服</span></div>
-        <div class="remote-stat"><strong>${已服}</strong><span>已服</span></div>
-        <div class="remote-stat"><strong>${漏服}</strong><span>漏服</span></div>
-      </div>
-      ${漏服 > 0 ? '<div class="remote-alert">⚠️ 检测到漏服药品，请及时联系老人</div>' : ''}
-    </div>
-    <div class="remote-med-list">${药品HTML || '<p class="empty-tip">暂无用药数据</p>'}</div>
-  `;
+      const 图标 = document.createElement('div');
+      图标.className = 'remote-med-icon';
+      图标.textContent = 药品.图标 || '💊';
+
+      const 信息 = document.createElement('div');
+      信息.className = 'remote-med-info';
+
+      const 名称 = document.createElement('div');
+      名称.className = 'remote-med-name';
+      名称.textContent = 药品.名称;
+
+      const 详情 = document.createElement('div');
+      详情.className = 'remote-med-detail';
+      详情.textContent = `${药品.时间} · ${药品.剂量} · ${药品.备注}`;
+
+      信息.appendChild(名称);
+      信息.appendChild(详情);
+
+      const 状态标 = document.createElement('span');
+      状态标.className = `status-badge ${状态}`;
+      状态标.textContent = 状态;
+
+      卡片.appendChild(图标);
+      卡片.appendChild(信息);
+      卡片.appendChild(状态标);
+      药品容器.appendChild(卡片);
+    });
+  }
+
+  结果区.appendChild(头部);
+  结果区.appendChild(药品容器);
   结果区.classList.remove('hidden');
 }
 
@@ -276,7 +353,17 @@ function 渲染远程查看结果(远程数据) {
  * 清除所有用药数据并恢复默认
  */
 export function 清除所有数据() {
-  if (confirm('确定要清除所有用药数据吗？此操作不可恢复。')) {
+  // 先自动导出备份
+  const 备份 = 导出数据();
+  const 备份Blob = new Blob([备份], { type: 'application/json' });
+  const 备份URL = URL.createObjectURL(备份Blob);
+  const 链接 = document.createElement('a');
+  链接.href = 备份URL;
+  链接.download = `智药伴备份_${获取今天日期()}.json`;
+  链接.click();
+  URL.revokeObjectURL(备份URL);
+
+  if (confirm('已自动下载数据备份。确定要清除所有用药数据吗？此操作不可恢复。')) {
     localStorage.removeItem(存储键);
 
     // 保留当前长辈模式设置
@@ -294,4 +381,69 @@ export function 清除所有数据() {
     渲染今日用药();
     alert('数据已清除');
   }
+}
+
+/**
+ * 导出数据到文件
+ */
+export function 导出数据到文件() {
+  const 数据 = 导出数据();
+  const Blob对象 = new Blob([数据], { type: 'application/json' });
+  const URL对象 = URL.createObjectURL(Blob对象);
+  const 链接 = document.createElement('a');
+  链接.href = URL对象;
+  链接.download = `智药伴备份_${获取今天日期()}_${获取当前时间字符串().replace(':', '-')}.json`;
+  链接.click();
+  URL.revokeObjectURL(URL对象);
+}
+
+/**
+ * 从文件导入数据
+ * @param {File} 文件
+ */
+export function 从文件导入数据(文件) {
+  if (!文件) return;
+  const 读取器 = new FileReader();
+  读取器.onload = function (e) {
+    const 文本 = e.target.result;
+    if (导入数据(文本)) {
+      保存数据();
+      渲染AI配置表单();
+      渲染云端配置表单();
+      渲染今日用药();
+      alert('数据导入成功');
+    } else {
+      alert('数据导入失败，文件格式不正确');
+    }
+  };
+  读取器.readAsText(文件);
+}
+
+/**
+ * 切换高级操作区域显示
+ */
+export function 切换高级操作() {
+  const 区域 = document.getElementById('advancedSettings');
+  if (区域) {
+    区域.classList.toggle('hidden');
+  }
+}
+
+/**
+ * 切换隐私政策弹窗
+ */
+export function 切换隐私政策(显示) {
+  const 弹窗 = document.getElementById('privacyModal');
+  if (弹窗) {
+    弹窗.classList.toggle('hidden', !显示);
+  }
+}
+
+/**
+ * 同意隐私政策
+ */
+export function 同意隐私政策() {
+  应用数据.设置.隐私已同意 = true;
+  保存数据();
+  切换隐私政策(false);
 }

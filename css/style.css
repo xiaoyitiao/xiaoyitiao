@@ -785,11 +785,13 @@ h3 {
 .nav-item {
   display: flex;
   flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
   align-items: center;
   gap: 2px;
-  padding: 6px 8px;
+  padding: 6px 2px;
   color: var(--次要文字);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 }
 
 .nav-item.active {
@@ -965,3 +967,284 @@ body.elderly-mode .chat-container {
   padding: 24px;
 }
 
+
+/* ===== 登录弹窗 ===== */
+.login-modal .modal-content {
+  text-align: left;
+  max-width: 360px;
+}
+
+.login-modal h3 {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.login-modal .login-desc {
+  text-align: center;
+  color: var(--次要文字);
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.login-modal .form-group {
+  margin-bottom: 16px;
+}
+
+.login-modal .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: var(--主文字);
+}
+
+.login-modal .form-group input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--边框);
+  border-radius: var(--圆角);
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.login-modal .code-group {
+  display: flex;
+  gap: 10px;
+}
+
+.login-modal .code-group input {
+  flex: 1;
+}
+
+.login-modal .code-group button {
+  white-space: nowrap;
+  padding: 0 16px;
+}
+
+.login-modal .login-actions {
+  margin-top: 24px;
+}
+
+.login-modal .login-tip {
+  text-align: center;
+  color: var(--次要文字);
+  font-size: 0.8rem;
+  margin-top: 12px;
+}
+
+/* ===== 顶部用户状态 ===== */
+.user-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.user-phone {
+  font-size: 0.85rem;
+  color: var(--次要文字);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.logout-btn {
+  background: transparent;
+  border: 1px solid var(--边框);
+  color: var(--次要文字);
+  padding: 4px 10px;
+  border-radius: var(--圆角);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+/* ===== 首次引导弹窗 ===== */
+.onboarding-modal .modal-content {
+  text-align: left;
+  max-width: 360px;
+}
+
+.onboarding-modal h3 {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.onboarding-option {
+  margin-bottom: 16px;
+}
+
+.onboarding-option label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--边框);
+  border-radius: var(--圆角);
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.onboarding-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+}
+
+/* ===== 隐私政策弹窗 ===== */
+.privacy-modal .modal-content {
+  text-align: left;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.privacy-modal h3 {
+  text-align: center;
+}
+
+.privacy-content {
+  text-align: left;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--主文字);
+  margin: 16px 0;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.privacy-content h4 {
+  margin: 12px 0 6px;
+  font-size: 1rem;
+}
+
+.privacy-content p {
+  margin-bottom: 8px;
+}
+
+/* ===== 高级操作区域 ===== */
+.advanced-settings {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--边框);
+}
+
+.advanced-settings .btn-secondary {
+  margin-bottom: 10px;
+}
+
+/* ===== 用药历史页面 ===== */
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.history-header h2 {
+  margin: 0;
+}
+
+.history-nav {
+  display: flex;
+  gap: 8px;
+}
+
+.history-nav button {
+  background: var(--卡片背景);
+  border: 1px solid var(--边框);
+  border-radius: var(--圆角);
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.history-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.history-stat {
+  background: var(--卡片背景);
+  border-radius: var(--圆角);
+  padding: 16px;
+  text-align: center;
+  box-shadow: var(--阴影);
+}
+
+.history-stat strong {
+  display: block;
+  font-size: 1.5rem;
+  color: var(--主色);
+  margin-bottom: 4px;
+}
+
+.history-stat span {
+  font-size: 0.85rem;
+  color: var(--次要文字);
+}
+
+.history-calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  background: var(--卡片背景);
+  border-radius: var(--圆角);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  box-shadow: var(--阴影);
+}
+
+.calendar-day.today {
+  border: 2px solid var(--主色);
+}
+
+.calendar-day.completed {
+  background: #e8f5e9;
+}
+
+.calendar-day.partial {
+  background: #fff3e0;
+}
+
+.calendar-day.missed {
+  background: #ffebee;
+}
+
+.calendar-day.no-plan {
+  background: var(--背景);
+  opacity: 0.6;
+}
+
+.calendar-day-number {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.calendar-day-status {
+  font-size: 0.65rem;
+  color: var(--次要文字);
+  text-align: center;
+}
+
+/* 底部导航 7 个入口时的适配 */
+.bottom-nav:has(.nav-item:nth-child(7)) .nav-item {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 6px 2px;
+}
+
+.bottom-nav:has(.nav-item:nth-child(7)) .nav-icon {
+  font-size: 1.1rem;
+}
+
+.bottom-nav:has(.nav-item:nth-child(7)) .nav-label {
+  font-size: 0.6rem;
+}

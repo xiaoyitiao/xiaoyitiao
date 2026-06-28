@@ -1,0 +1,171 @@
+{
+  "info": {
+    "name": "智药伴 - SMS & Push 测试",
+    "description": "短信验证码发送和推送功能 Mock 测试",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. 发送短信验证码（Mock 模式）",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phone\": \"13800138001\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/send-code",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "send-code"]
+        },
+        "description": "演示模式下验证码固定为 123456"
+      },
+      "response": []
+    },
+    {
+      "name": "2. 登录获取 Token",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"phone\": \"13800138001\",\n  \"code\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "3. 保存推送订阅",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {",
+              "    var jsonData = pm.response.json();",
+              "    if (jsonData.data && jsonData.data.token) {",
+              "        pm.collectionVariables.set('token', jsonData.data.token);",
+              "        pm.collectionVariables.set('userId', jsonData.data.userId);",
+              "    }",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"endpoint\": \"https://example.com/push/test-123\",\n  \"p256dh\": \"BNcRdreALRsFltevg7GoFranzDVi5_i距obIZf7LWGr-sxu2PyzGf3Ui8iZ3X7EIQh6e1X3T8T6Z5Z5Z5Z5Z5Z\",\n  \"auth\": \"tBHItJI5svb002h7y14++A==\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/push/subscriptions",
+          "host": ["{{baseUrl}}"],
+          "path": ["push", "subscriptions"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "4. 获取用户推送订阅列表",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/push/subscriptions",
+          "host": ["{{baseUrl}}"],
+          "path": ["push", "subscriptions"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "5. 手动触发推送测试（仅验证日志）",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/reminders/trigger",
+          "host": ["{{baseUrl}}"],
+          "path": ["reminders", "trigger"]
+        },
+        "description": "此接口会触发提醒调度，检查日志验证推送是否被调用"
+      },
+      "response": []
+    },
+    {
+      "name": "6. 查询提醒日志",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/reminders/logs",
+          "host": ["{{baseUrl}}"],
+          "path": ["reminders", "logs"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "7. 查询指定类型提醒日志",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/reminders/logs?type=DUE",
+          "host": ["{{baseUrl}}"],
+          "path": ["reminders", "logs"],
+          "query": [
+            {
+              "key": "type",
+              "value": "DUE"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

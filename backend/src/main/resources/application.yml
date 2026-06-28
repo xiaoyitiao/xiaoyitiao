@@ -1,0 +1,78 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: zhiyaoban-backend
+
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DB:zhiyaoban}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: ${MYSQL_USER:root}
+    password: ${MYSQL_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+# JWT 配置
+# ⚠️ 【安全警告】生产环境必须配置强密钥，严禁使用默认值！
+# 默认密钥仅用于本地开发测试，JwtUtil 会自动检测并阻止启动。
+# 生产环境请通过环境变量 JWT_SECRET 注入至少 32 位随机密钥。
+zhiyaoban:
+  jwt:
+    secret: ${JWT_SECRET:zhiyaoban-default-secret-must-be-replaced-in-production}
+    expiration-ms: ${JWT_EXPIRATION_MS:604800000}
+  ai:
+    # 后端代理模式：前端不再直接调用大模型，密钥仅保存在服务端
+    enabled: ${AI_ENABLED:false}
+    api-url: ${AI_API_URL:}
+    api-key: ${AI_API_KEY:}
+    model: ${AI_MODEL:}
+  sms:
+    # 真实环境请接入阿里云短信；演示模式固定验证码 123456
+    mock: ${SMS_MOCK:true}
+    fixed-code: ${SMS_FIXED_CODE:123456}
+    # 阿里云短信配置（mock=false 时必须配置）
+    access-key-id: ${SMS_ACCESS_KEY_ID:}
+    access-key-secret: ${SMS_ACCESS_KEY_SECRET:}
+    sign-name: ${SMS_SIGN_NAME:智药伴}
+    template-code: ${SMS_TEMPLATE_CODE:}
+    region-id: ${SMS_REGION_ID:cn-hangzhou}
+    expire-minutes: ${SMS_EXPIRE_MINUTES:5}
+  report:
+    # Python 报告脚本路径（相对项目根目录）
+    python-path: ${PYTHON_PATH:python}
+    script-path: ${REPORT_SCRIPT_PATH:../generate_midterm_report.py}
+    output-dir: ${REPORT_OUTPUT_DIR:./reports}
+  scheduler:
+    # 提醒调度相关配置
+    enabled: ${SCHEDULER_ENABLED:true}
+    # 漏服提醒延迟分钟数（过了提醒时间多少分钟后发漏服提醒）
+    missed-delay-minutes: ${SCHEDULER_MISSED_DELAY:30}
+    # 库存提醒阈值
+    stock-threshold: ${SCHEDULER_STOCK_THRESHOLD:5}
+  push:
+    # 推送平台类型：jpush / webpush / mock
+    enabled: ${PUSH_ENABLED:true}
+    platform: ${PUSH_PLATFORM:mock}
+    # 极光推送配置（platform=jpush 时必须配置）
+    jpush-app-key: ${JPUSH_APP_KEY:}
+    jpush-master-secret: ${JPUSH_MASTER_SECRET:}
+    jpush-production: ${JPUSH_PRODUCTION:false}
+    jpush-title-prefix: ${JPUSH_TITLE_PREFIX:智药伴}
+    # Web Push 配置（platform=webpush 时必须配置）
+    vapid-subject: ${PUSH_VAPID_SUBJECT:mailto:admin@zhiyaoban.com}
+    vapid-public-key: ${PUSH_VAPID_PUBLIC_KEY:}
+    vapid-private-key: ${PUSH_VAPID_PRIVATE_KEY:}
+
+logging:
+  level:
+    com.zhiyaoban: INFO

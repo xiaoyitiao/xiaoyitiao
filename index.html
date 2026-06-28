@@ -15,6 +15,10 @@
         <span class="title">智药伴</span>
       </div>
       <div class="header-actions">
+        <div class="user-status">
+          <span id="userPhone" class="user-phone hidden"></span>
+          <button id="logoutBtn" class="logout-btn hidden">退出</button>
+        </div>
         <button id="modeToggle" class="mode-toggle" aria-label="切换长辈模式">
           <span class="mode-icon">👴</span>
           <span class="mode-text">长辈模式</span>
@@ -115,6 +119,10 @@
             </select>
           </div>
           <div class="form-group">
+            <label for="medStock">库存（可选）</label>
+            <input type="number" id="medStock" placeholder="如：30" min="0">
+          </div>
+          <div class="form-group">
             <label for="medNote">备注</label>
             <input type="text" id="medNote" placeholder="如：饭后服用">
           </div>
@@ -136,6 +144,23 @@
         </div>
       </section>
 
+      <!-- 用药历史 -->
+      <section id="page-history" class="page">
+        <div class="history-header">
+          <h2 id="historyTitle">用药历史</h2>
+          <div class="history-nav">
+            <button id="historyPrevBtn">上月</button>
+            <button id="historyNextBtn">下月</button>
+          </div>
+        </div>
+        <div id="historyStats" class="history-stats">
+          <!-- 动态生成 -->
+        </div>
+        <div id="historyCalendar" class="history-calendar">
+          <!-- 动态生成 -->
+        </div>
+      </section>
+
       <!-- AI助手 -->
       <section id="page-ai" class="page">
         <h2>AI用药助手</h2>
@@ -152,7 +177,7 @@
           <input type="text" id="chatInput" placeholder="输入问题，如：阿司匹林饭前吃还是饭后吃？">
           <button id="chatSendBtn" class="chat-send-btn">发送</button>
         </div>
-        <p class="demo-note">演示说明：未配置API密钥时使用本地智能回复</p>
+        <p class="demo-note">AI 回答由后端代理调用，未配置后端时使用本地知识库。</p>
       </section>
 
       <!-- 家属关怀 -->
@@ -207,18 +232,14 @@
 
         <div class="settings-group">
           <h3>智能接口设置</h3>
-          <p class="setting-desc">配置后，AI 助手和拍照识别可使用真实大模型进行智能回答和药品信息解析。</p>
+          <p class="setting-desc">AI 助手和拍照识别默认通过后端代理调用，无需在前端填写密钥。</p>
           <label class="setting-item">
             <span>启用真实智能接口</span>
             <input type="checkbox" id="aiEnabled">
           </label>
           <div class="form-group">
-            <label for="aiApiUrl">接口地址</label>
+            <label for="aiApiUrl">接口地址（后端代理可留空）</label>
             <input type="text" id="aiApiUrl" placeholder="如：https://api.example.com/v1/chat/completions">
-          </div>
-          <div class="form-group">
-            <label for="aiApiKey">接口密钥</label>
-            <input type="password" id="aiApiKey" placeholder="输入你的接口密钥">
           </div>
           <div class="form-group">
             <label for="aiModel">模型名称</label>
@@ -227,6 +248,7 @@
           <button id="aiTestBtn" class="btn-secondary btn-full">测试连接</button>
           <div id="aiTestResult" class="test-result hidden"></div>
         </div>
+
         <div class="settings-group">
           <h3>家庭共享设置</h3>
           <p class="setting-desc">配置后，老人用药数据可同步到云端，家属输入家庭编号和查看密码即可远程查看。</p>
@@ -254,6 +276,11 @@
             <label for="familyPassword">查看密码</label>
             <input type="password" id="familyPassword" placeholder="家属查看时需要输入">
           </div>
+          <div class="form-group">
+            <label for="emergencyContact">紧急联系人电话（可选）</label>
+            <input type="tel" id="emergencyContact" placeholder="家属一键联系时使用">
+          </div>
+          <button id="emergencyBtn" class="btn-primary btn-full">一键联系家属</button>
           <button id="cloudUploadBtn" class="btn-secondary btn-full">立即同步到云端</button>
           <div id="cloudStatus" class="test-result hidden"></div>
         </div>
@@ -274,16 +301,33 @@
         </div>
 
         <div class="settings-group">
+          <h3>数据与隐私</h3>
+          <button id="advancedToggle" class="btn-secondary btn-full">高级操作（导出/导入）</button>
+          <div id="advancedSettings" class="advanced-settings hidden">
+            <button id="exportDataBtn" class="btn-secondary btn-full">导出数据备份</button>
+            <label class="btn-secondary btn-full" style="display:block;text-align:center;cursor:pointer;">
+              从文件导入数据
+              <input type="file" id="importDataInput" accept="application/json" hidden>
+            </label>
+          </div>
+          <p class="setting-desc" style="margin-top:12px;">
+            使用本应用即表示您同意我们的
+            <a href="#" id="privacyLink">隐私政策</a>。
+          </p>
+        </div>
+
+        <div class="settings-group">
           <h3>关于</h3>
           <div class="setting-item">
             <span>版本</span>
-            <span class="setting-value">v1.0.0 演示版</span>
+            <span class="setting-value">v1.0.0</span>
           </div>
           <p class="about-text">
             智药伴是一款面向老年人的AI用药提醒Web应用，支持语音录入、智能计划、家属关怀等功能。
           </p>
         </div>
         <button id="clearDataBtn" class="btn-danger btn-full">清除所有数据</button>
+        <button id="settingsLogoutBtn" class="btn-danger btn-full" style="margin-top:10px;">退出登录</button>
       </section>
     </main>
 
@@ -300,6 +344,10 @@
       <button class="nav-item" data-page="schedule">
         <span class="nav-icon">📅</span>
         <span class="nav-label">计划</span>
+      </button>
+      <button class="nav-item" data-page="history">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">历史</span>
       </button>
       <button class="nav-item" data-page="ai">
         <span class="nav-icon">🤖</span>
@@ -324,6 +372,79 @@
         <div class="modal-actions">
           <button id="reminderTaken" class="btn-primary">我已服用</button>
           <button id="reminderLater" class="btn-secondary">稍后提醒</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 登录弹窗 -->
+    <div id="loginModal" class="modal login-modal hidden">
+      <div class="modal-content">
+        <h3>登录智药伴</h3>
+        <p class="login-desc">手机号验证码登录，数据可同步到云端</p>
+        <div class="form-group">
+          <label for="loginPhone">手机号</label>
+          <input type="tel" id="loginPhone" placeholder="请输入手机号" maxlength="11">
+        </div>
+        <div class="form-group">
+          <label for="loginCode">验证码</label>
+          <div class="code-group">
+            <input type="text" id="loginCode" placeholder="请输入验证码" maxlength="6">
+            <button id="sendCodeBtn" class="btn-secondary">获取验证码</button>
+          </div>
+        </div>
+        <div class="login-actions">
+          <button id="loginBtn" class="btn-primary btn-full">登录</button>
+        </div>
+        <p class="login-tip">演示模式验证码为 123456</p>
+      </div>
+    </div>
+
+    <!-- 首次使用引导弹窗 -->
+    <div id="onboardingModal" class="modal onboarding-modal hidden">
+      <div class="modal-content">
+        <h3>欢迎使用智药伴</h3>
+        <p class="login-desc">让我们简单设置一下，即可开始使用。</p>
+        <div class="onboarding-option">
+          <label>
+            <input type="checkbox" id="onboardingElderlyMode" checked>
+            <span>开启长辈模式（大字体、高对比度）</span>
+          </label>
+        </div>
+        <div class="onboarding-option">
+          <p style="margin-bottom:8px;font-weight:500;">您的身份是？</p>
+          <label>
+            <input type="radio" name="onboardingRole" value="elder" checked>
+            <span>我是老人（自己管理用药）</span>
+          </label>
+          <label>
+            <input type="radio" name="onboardingRole" value="family">
+            <span>我是家属（查看老人用药）</span>
+          </label>
+        </div>
+        <div class="login-actions">
+          <button id="onboardingDoneBtn" class="btn-primary btn-full">开始使用</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 隐私政策弹窗 -->
+    <div id="privacyModal" class="modal privacy-modal hidden">
+      <div class="modal-content">
+        <h3>隐私政策</h3>
+        <div class="privacy-content">
+          <p>智药伴重视您的隐私保护。本应用收集的信息仅用于提供用药提醒服务，不会分享给第三方。</p>
+          <h4>1. 信息收集</h4>
+          <p>我们可能收集您的手机号、用药计划、打卡记录等信息，用于同步数据和发送提醒。</p>
+          <h4>2. 信息使用</h4>
+          <p>您的数据主要用于：生成用药提醒、展示用药历史、家属远程查看（需您主动配置）。</p>
+          <h4>3. 信息保护</h4>
+          <p>敏感配置（如 API 密钥、云服务密钥）在本地加密存储，传输过程使用 HTTPS。</p>
+          <h4>4. 您的权利</h4>
+          <p>您可以随时清除本地数据或退出登录。如需删除云端数据，请联系管理员。</p>
+        </div>
+        <div class="modal-actions">
+          <button id="agreePrivacyBtn" class="btn-primary">同意并继续</button>
+          <button id="closePrivacyBtn" class="btn-secondary">关闭</button>
         </div>
       </div>
     </div>

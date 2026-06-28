@@ -1,0 +1,62 @@
+server:
+  port: 0  # 测试环境使用随机端口
+
+spring:
+  application:
+    name: zhiyaoban-backend-test
+
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # 测试环境每次都重新创建表
+    show-sql: true  # 测试环境显示SQL
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true  # 启用H2控制台
+
+# JWT配置
+zhiyaoban:
+  jwt:
+    secret: test-secret-for-testing-only
+    expiration-ms: 3600000  # 1小时
+  ai:
+    enabled: false
+  sms:
+    mock: true
+    fixed-code: "123456"
+    access-key-id: ""
+    access-key-secret: ""
+    sign-name: "智药伴"
+    template-code: ""
+    expire-minutes: 5
+  push:
+    enabled: true
+    platform: mock
+    jpush-app-key: ""
+    jpush-master-secret: ""
+    jpush-production: false
+    jpush-title-prefix: "智药伴"
+    vapid-subject: "mailto:test@zhiyaoban.com"
+    vapid-public-key: ""
+    vapid-private-key: ""
+  report:
+    python-path: python
+    script-path: ../generate_midterm_report.py
+    output-dir: ./reports
+
+logging:
+  level:
+    com.zhiyaoban: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
