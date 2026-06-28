@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智药伴 - 设计说明文档</title>
+  <style>
+    :root {
+      --primary: #1B5E20;
+      --primary-dark: #0D4714;
+      --primary-light: #43A047;
+      --accent: #FF9800;
+      --success: #4CAF50;
+      --warning: #FFC107;
+      --danger: #F44336;
+      --text-primary: #2C3E50;
+      --text-secondary: #5D6D7E;
+      --text-hint: #95A5A6;
+      --bg-main: #F8FAFB;
+      --bg-card: #FFFFFF;
+      --border: #E8ECF0;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    html { font-size: 16px; }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+      background: linear-gradient(180deg, #E8F5E9 0%, #F8FAFB 20%);
+      color: var(--text-primary);
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 24px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 50px;
+      padding-bottom: 30px;
+      border-bottom: 3px solid var(--primary);
+      background: rgba(255,255,255,0.9);
+      border-radius: 0 0 24px 24px;
+      box-shadow: var(--shadow);
+    }
+    
+    .logo-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    
+    .logo-circle {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(27, 94, 32, 0.3);
+    }
+    
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      fill: white;
+    }
+    
+    .header-title {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+    
+    .header-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+    
+    .header-info {
+      font-size: 14px;
+      color: var(--text-hint);
+    }
+    
+    .section {
+      background: white;
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--border);
+    }
+    
+    .section-number {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+    
+    .section-icon {
+      width: 24px;
+      height: 24px;
+      fill: var(--primary);
+    }
+    
+    .subsection-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 20px 0 12px 0;
+      padding-left: 12px;
+      border-left: 4px solid var(--accent);
+    }
+    
+    .text-block {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      text-align: justify;
+      text-indent: 2em;
+    }
+    
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(27, 94, 32, 0.05) 0%, rgba(67, 160, 71, 0.05) 100%);
+      border-left: 4px solid var(--primary);
+      padding: 20px;
+      border-radius: 0 12px 12px 0;
+      margin: 20px 0;
+    }
+    
+    .highlight-text {
+      font-size: 16px;
+      color: var(--primary-dark);
+      font-weight: 500;
+    }
+    
+    .stat-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    
+    .stat-table th, .stat-table td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .stat-table th {
+      background: linear-gradient(135deg, rgba(27, 94, 32, 0.08) 0%, rgba(67, 160, 71, 0.08) 100%);
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    
+    .stat-table tr:hover td {
+      background: rgba(27, 94, 32, 0.03);
+    }
+    
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    
+    .feature-card {
+      background: var(--bg-main);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+    
+    .feature-card:hover {
+      border-color: var(--primary-light);
+      background: rgba(27, 94, 32, 0.03);
+    }
+    
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+    }
+    
+    .feature-icon svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
+    }
+    
+    .feature-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    
+    .feature-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    
+    .tech-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    
+    .tech-table th {
+      background: var(--bg-main);
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--border);
+    }
+    
+    .tech-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    
+    .tech-table .tech-category {
+      font-weight: 600;
+      color: var(--primary-dark);
+    }
+    
+    .color-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .badge-primary { background: rgba(27, 94, 32, 0.15); color: var(--primary-dark); }
+    .badge-accent { background: rgba(255, 152, 0, 0.15); color: #E65100; }
+    .badge-success { background: rgba(76, 175, 80, 0.15); color: #1B5E20; }
+    .badge-danger { background: rgba(244, 67, 54, 0.15); color: #C62828; }
+    
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .team-card {
+      text-align: center;
+      padding: 24px;
+      background: var(--bg-main);
+      border-radius: 12px;
+    }
+    
+    .team-avatar {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .team-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    
+    .team-role {
+      font-size: 13px;
+      color: var(--text-hint);
+    }
+    
+    .problem-list {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .problem-item {
+      background: var(--bg-main);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 4px solid var(--accent);
+    }
+    
+    .problem-title {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    
+    .problem-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+    
+    .problem-solution {
+      font-size: 13px;
+      color: var(--success);
+      font-weight: 500;
+    }
+    
+    .architecture {
+      background: #2C3E50;
+      color: #ECF0F1;
+      padding: 24px;
+      border-radius: 12px;
+      font-family: 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    
+    .architecture .node { color: #4CAF50; }
+    .architecture .branch { color: #FF9800; }
+    
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-hint);
+      font-size: 14px;
+    }
+    
+    .footer-line {
+      width: 60px;
+      height: 3px;
+      background: var(--primary);
+      margin: 0 auto 16px;
+      border-radius: 2px;
+    }
+    
+    @media (max-width: 768px) {
+      .container { padding: 20px 16px; }
+      .section { padding: 24px 16px; }
+      .header-title { font-size: 28px; }
+      .stat-table { font-size: 12px; }
+      .stat-table th, .stat-table td { padding: 10px 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo-section">
+        <div class="logo-circle">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6 L12 18 M6 12 L18 12"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="header-title">智药伴</h1>
+          <p class="header-subtitle">AI智能用药提醒 Web 应用</p>
+        </div>
+      </div>
+      <p class="header-info">深圳大学 新闻1班 守护银发小组 | v3.0</p>
+    </header>
+
+    <section class="section">
+      <div class="section-title">
+        <span class="section-number">一</span>
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20V10"/>
+          <path d="M18 20V4"/>
+          <path d="M6 20v-6"/>
+        </svg>
+        <span>选题与真实需求回顾</span>
+      </div>
+      
+      <div class="text-block">
+        随着我国人口老龄化程度的加深，老年人用药安全问题日益突出。据调研数据显示，65岁以上老年人平均漏服率达30%-50%，多药同服时药物相互作用风险显著增加，漏服或误服药物可能导致病情加重或引发并发症。子女在外工作，无法实时监督父母用药情况，这成为众多家庭的痛点。
+      </div>
+      
+      <div class="subsection-title">核心痛点分析</div>
+      
+      <table class="stat-table">
+        <thead>
+          <tr>
+            <th>问题类别</th>
+            <th>具体表现</th>
+            <th>影响程度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge-accent">操作不便</span></td>
+            <td>老年人视力下降，传统手机应用字体小、操作复杂</td>
+            <td>高</td>
+          </tr>
+          <tr>
+            <td><span class="badge-danger">记忆困难</span></td>
+            <td>记忆力衰退，容易忘记服药时间和剂量</td>
+            <td>高</td>
+          </tr>
+          <tr>
+            <td><span class="badge-danger">安全隐患</span></td>
+            <td>多种药物同时服用时，缺乏药物相互作用提醒</td>
+            <td>极高</td>
+          </tr>
+          <tr>
+            <td><span class="badge-primary">亲情缺失</span></td>
+            <td>子女无法远程了解父母的用药情况</td>
+            <td>中</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="highlight-box">
+        <div class="highlight-text">
+          <strong>解决方案定位：</strong><br>
+          智药伴旨在打造一款专为老年人设计的用药提醒应用，核心价值主张——"让用药更简单，让关爱更及时"。通过语音交互、大字显示、智能提醒等特性，降低老年人使用门槛；通过家属端功能，让子女远程掌握父母用药状态，构建完整的关爱闭环。
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <span class="section-number">二</span>
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+          <line x1="9" y1="3" x2="9" y2="21"/>
+          <line x1="15" y1="3" x2="15" y2="21"/>
+        </svg>
+        <span>功能说明</span>
+      </div>
+      
+      <div class="subsection-title">页面架构</div>
+      
+      <div class="architecture">
+        <span class="node">智药伴应用</span><br>
+        ├── <span class="branch">首页（今日用药）</span><br>
+        │   ├── 问候语与语音播报<br>
+        │   ├── 今日用药概览（已服/待服/漏服/总计）<br>
+        │   ├── 用药安全提示（药物相互作用）<br>
+        │   └── 今日用药时间线<br>
+        ├── <span class="branch">录药页</span><br>
+        │   ├── 语音录药（语音识别用药信息）<br>
+        │   ├── 拍照识别（拍药盒识别药品）<br>
+        │   ├── 扫码识别（扫药品条码）<br>
+        │   └── 手动添加（完整表单录入）<br>
+        ├── <span class="branch">AI问药师</span><br>
+        │   ├── 用药咨询对话<br>
+        │   ├── 药物相互作用查询<br>
+        │   └── AI用药建议<br>
+        ├── <span class="branch">家属端</span><br>
+        │   ├── 扫码绑定老人账号<br>
+        │   ├── 老人今日用药状态<br>
+        │   └── 用药记录查看<br>
+        ├── <span class="branch">记录页</span><br>
+        │   ├── 历史用药记录<br>
+        │   ├── 统计图表（服药依从率）<br>
+        │   └── 记录导出<br>
+        └── <span class="branch">设置页</span><br>
+            ├── 字体大小调节（标准/大字/超大字）<br>
+            ├── 语音提醒设置<br>
+            ├── 隐私协议查看<br>
+            └── 关于我们
+      </div>
+      
+      <div class="subsection-title">核心功能模块</div>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="feature-title">今日用药</div>
+          <div class="feature-desc">智能问候、语音播报、用药概览、安全提示、时间线打卡</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+            </svg>
+          </div>
+          <div class="feature-title">语音录药</div>
+          <div class="feature-desc">点击按钮说出用药信息，AI自动解析药品名称、剂量、频次</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <div class="feature-title">拍照识别</div>
+          <div class="feature-desc">拍摄药盒照片，OCR识别药品信息，支持扫码识别</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div class="feature-title">AI问药师</div>
+          <div class="feature-desc">自然语言对话、药物相互作用查询、个性化用药建议</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <div class="feature-title">家属端</div>
+          <div class="feature-desc">扫码绑定、实时状态查看、异常提醒，远程关怀父母健康</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </div>
+          <div class="feature-title">大字模式</div>
+          <div class="feature-desc">默认大字模式，支持标准/大字/超大字三档调节，关爱老年人视力</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <span class="section-number">三</span>
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <polyline points="12 6 12 12 16 14"/>
+        </svg>
+        <span>技术说明</span>
+      </div>
+      
+      <div class="subsection-title">技术栈</div>
+      
+      <table class="tech-table">
+        <thead>
+          <tr>
+            <th>分类</th>
+            <th>技术</th>
+            <th>版本</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="tech-category">构建工具</td>
+            <td>Vite</td>
+            <td>8.1.0</td>
+            <td>快速开发和生产构建，支持热更新</td>
+          </tr>
+          <tr>
+            <td class="tech-category">前端语言</td>
+            <td>HTML5 + CSS3 + JavaScript ES6+</td>
+            <td>-</td>
+            <td>原生开发，轻量高效，无需额外框架</td>
+          </tr>
+          <tr>
+            <td class="tech-category">后端框架</td>
+            <td>Spring Boot</td>
+            <td>3.x</td>
+            <td>企业级后端服务框架，支持定时任务</td>
+          </tr>
+          <tr>
+            <td class="tech-category">数据库</td>
+            <td>MySQL + IndexedDB</td>
+            <td>-</td>
+            <td>后端MySQL存储，前端IndexedDB本地缓存</td>
+          </tr>
+          <tr>
+            <td class="tech-category">语音识别</td>
+            <td>Web Speech API</td>
+            <td>-</td>
+            <td>浏览器原生语音识别，支持中文</td>
+          </tr>
+          <tr>
+            <td class="tech-category">语音合成</td>
+            <td>Web Speech Synthesis API</td>
+            <td>-</td>
+            <td>浏览器原生语音合成，语速调慢至0.85倍</td>
+          </tr>
+          <tr>
+            <td class="tech-category">OCR识别</td>
+            <td>Tesseract.js</td>
+            <td>7.0.0</td>
+            <td>前端图片文字识别，用于药盒拍照识别</td>
+          </tr>
+          <tr>
+            <td class="tech-category">数据加密</td>
+            <td>Web Crypto API</td>
+            <td>-</td>
+            <td>前端AES加密，本地数据安全存储</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="subsection-title">核心技术实现</div>
+      
+      <div class="text-block">
+        <strong>前端架构：</strong>采用单页应用架构，基于原生JavaScript开发，无需额外框架，轻量高效。核心文件包括index.html（应用入口）、style.css（核心样式）、app.js（主应用逻辑），以及各功能模块的独立JS文件。
+      </div>
+      
+      <div class="text-block">
+        <strong>数据存储方案：</strong>采用本地优先的存储策略。IndexedDB用于存储药品数据、用药记录和用户设置，容量大且支持事务操作；localStorage用于存储简单配置项；敏感数据采用AES加密存储，密钥基于设备特征派生，确保数据安全。
+      </div>
+      
+      <div class="text-block">
+        <strong>语音交互实现：</strong>使用Web Speech API实现语音识别，支持中文语音转文字；使用SpeechSynthesis API实现语音合成，语速调慢至0.85倍，适合老年人听觉习惯；支持语音导航，说出指令即可自动跳转页面。
+      </div>
+      
+      <div class="text-block">
+        <strong>响应式设计：</strong>以手机屏幕尺寸为基准设计，使用Flexbox和Grid实现自适应布局；按钮尺寸≥48px，便于手指操作；支持三档字体大小切换，默认大字模式。
+      </div>
+      
+      <div class="subsection-title">AI工具应用</div>
+      
+      <table class="stat-table">
+        <thead>
+          <tr>
+            <th>AI工具</th>
+            <th>应用场景</th>
+            <th>具体作用</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>语音识别API</td>
+            <td>语音录药</td>
+            <td>将用户语音转换为文字，解析用药信息</td>
+          </tr>
+          <tr>
+            <td>AI语义分析</td>
+            <td>语音录药解析</td>
+            <td>从自然语言中提取药品名称、剂量、频次、时间等信息</td>
+          </tr>
+          <tr>
+            <td>AI用药助手</td>
+            <td>问药师功能</td>
+            <td>回答用药相关问题，提供药物相互作用提醒</td>
+          </tr>
+          <tr>
+            <td>OCR识别</td>
+            <td>拍照识药</td>
+            <td>识别药盒上的文字信息</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <span class="section-number">四</span>
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        <span>分工说明</span>
+      </div>
+      
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-avatar">负</div>
+          <div class="team-name">项目负责人</div>
+          <div class="team-role">整体项目规划、进度把控、需求分析</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">前</div>
+          <div class="team-name">前端开发</div>
+          <div class="team-role">页面设计、交互实现、样式开发、语音功能集成</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">后</div>
+          <div class="team-name">后端开发</div>
+          <div class="team-role">Spring Boot后端服务、API设计、数据库开发</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">AI</div>
+          <div class="team-name">AI功能开发</div>
+          <div class="team-role">语音识别解析、药物相互作用检测、AI助手功能</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">设</div>
+          <div class="team-name">UI/UX设计</div>
+          <div class="team-role">界面设计、配色方案、交互流程、老年人体验优化</div>
+        </div>
+        <div class="team-card">
+          <div class="team-avatar">测</div>
+          <div class="team-name">测试与优化</div>
+          <div class="team-role">功能测试、兼容性测试、性能优化、用户反馈收集</div>
+        </div>
+      </div>
+      
+      <div class="subsection-title">开发流程</div>
+      
+      <div class="text-block">
+        1. <strong>需求分析</strong>：基于实践调研，明确老年人用药场景的核心需求；<br>
+        2. <strong>原型设计</strong>：设计应用架构和界面原型；<br>
+        3. <strong>前端开发</strong>：实现页面布局、样式和交互逻辑；<br>
+        4. <strong>后端开发</strong>：搭建后端服务，提供API支持；<br>
+        5. <strong>功能集成</strong>：整合语音、AI、数据存储等功能；<br>
+        6. <strong>测试优化</strong>：多设备测试、用户体验优化；<br>
+        7. <strong>部署上线</strong>：GitHub Pages前端部署、后端服务器部署。
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-title">
+        <span class="section-number">五</span>
+        <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20V10"/>
+          <path d="M18 20V4"/>
+          <path d="M6 20v-6"/>
+        </svg>
+        <span>反思与改进</span>
+      </div>
+      
+      <div class="subsection-title">开发中遇到的问题与解决方式</div>
+      
+      <ul class="problem-list">
+        <li class="problem-item">
+          <div class="problem-title">移动端兼容性问题</div>
+          <div class="problem-desc">iOS Safari对Web Speech API支持有限，语音识别功能无法正常使用</div>
+          <div class="problem-solution">解决：检测浏览器类型，iOS端降级为手动输入模式，提供友好提示</div>
+        </li>
+        <li class="problem-item">
+          <div class="problem-title">数据安全问题</div>
+          <div class="problem-desc">本地存储可能被非法访问，敏感数据存在泄露风险</div>
+          <div class="problem-solution">解决：采用AES加密存储敏感数据，密钥基于设备特征派生，不离开设备</div>
+        </li>
+        <li class="problem-item">
+          <div class="problem-title">GitHub Pages部署问题</div>
+          <div class="problem-desc">资源路径配置错误，页面无法正确加载CSS和JS文件</div>
+          <div class="problem-solution">解决：修改Vite配置，使用相对路径base: ''，确保资源正确加载</div>
+        </li>
+        <li class="problem-item">
+          <div class="problem-title">样式显示问题</div>
+          <div class="problem-desc">缺失核心CSS文件，页面显示为纯文本，没有任何样式</div>
+          <div class="problem-solution">解决：重新编写完整的style.css，包含所有组件样式，确保页面正常显示</div>
+        </li>
+        <li class="problem-item">
+          <div class="problem-title">弹窗点击失效</div>
+          <div class="problem-desc">多个模态框重叠，点击事件被上层元素拦截，隐私协议同意按钮无法点击</div>
+          <div class="problem-solution">解决：修复CSS，确保只有需要的弹窗显示，其他默认隐藏，添加.show类控制显示状态</div>
+        </li>
+      </ul>
+      
+      <div class="subsection-title">后续可改进方向</div>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+            </svg>
+          </div>
+          <div class="feature-title">智能用药建议</div>
+          <div class="feature-desc">基于用户用药历史和健康数据，提供个性化建议</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+          </div>
+          <div class="feature-title">服药提醒推送</div>
+          <div class="feature-desc">支持浏览器推送通知、短信提醒等多种渠道</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <div class="feature-title">药品库存管理</div>
+          <div class="feature-desc">监控药品剩余量，低库存时提醒用户补充</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <div class="feature-title">用药报告生成</div>
+          <div class="feature-desc">定期生成用药依从性报告，支持导出和分享</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <div class="feature-title">性能优化</div>
+          <div class="feature-desc">代码分割、懒加载，提升首屏加载速度</div>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <div class="feature-title">辅助功能</div>
+          <div class="feature-desc">增加高对比度模式、屏幕阅读器优化，提升无障碍体验</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-line"></div>
+      <p>深圳大学 新闻1班 守护银发小组</p>
+      <p style="margin-top: 8px; color: var(--primary); font-weight: 600;">智药伴 v3.0 · 守护每一次按时服药</p>
+    </footer>
+  </div>
+</body>
+</html>
