@@ -2,9 +2,9 @@
 node_modules
 .pnpm-store
 
-# 前端构建输出
-dist
-build
+# 前端构建输出（用于 GitHub Pages 部署，不排除）
+# dist
+# build
 
 # 后端构建输出
 backend/target/
